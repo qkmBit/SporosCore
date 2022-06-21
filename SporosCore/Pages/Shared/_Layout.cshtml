@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <a href="main.html" id="HeaderLogo">
+        <a href='@Url.Action("Index","Home")' id="HeaderLogo">
             <img src="~/images/logo.svg">
         </a>
         <nav>
@@ -38,8 +38,8 @@
             <nav class="main-menu">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a href="Profile.html">Личный кабинет</a>
-                    <a href="#">Выйти</a>
+                    <a asp-action="Profile" asp-controller="Account">Личный кабинет</a>
+                    <a asp-controller="Account" asp-action="Logout">Выйти</a>
                 }
                 else
                 {
@@ -57,7 +57,7 @@
     <footer>
         <div class="footer-row">
             <a href="main.html" id="FooterLogo">
-                <img src="~/Content/images/logo.svg">
+                <img src="~/images/logo.svg">
             </a>
             <div class="address">
                 Россия, 680000, г.&nbsp;Хабаровск,<br>
@@ -101,8 +101,8 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @RenderSection("Scripts", required: false)
+    <script src="~/js/main.js"></script>
+    
+        @RenderSection("scripts", required:false)
 </body>
 </html>

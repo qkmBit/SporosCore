@@ -1,0 +1,98 @@
+﻿@model SporosCore.Models.ViewModels.ProfileViewModel
+@{
+    ViewBag.Title = "Профиль пользователя.";
+    ViewBag.css= new string[4]{"profileStyle.css","headerStyle.css","storeCategoryStyle.css","footerStyle.css"};
+}
+@Html.AntiForgeryToken()
+<div class="path">
+        <p class="first-path">Главная</p>
+        <div class="arrow">
+            <div></div>
+        </div>
+        <p class="current-path">Профиль</p>
+    </div>
+    <div class="main">
+        <div class="profileTitle">
+            <p>Личный кабинет</p>
+        </div>
+        <div class="profileContainer">
+            <div class="profileColumn">
+                <div class="profileMainInfo">
+                    <div class="profileRow">
+                        <p>Основная информация</p>
+                    </div>
+                    <div class="profileRow">
+                        <label for="Surname">Фамилия</label>
+                        <input type="text" asp-for="SecondName" class="profileInput" id="Surname" disabled tabindex="1" placeholder="Фамилия" value="@Model.SecondName">
+                    </div>
+                    <div class="profileRow">
+                        <label for="Name">Имя</label>
+                        <input type="text" asp-for="FirstName" class="profileInput" id="Name" disabled tabindex="2" placeholder="Имя" value="@Model.FirstName">
+                    </div>
+                    <div class="profileRow">
+                        <label for="Midname">Отчество</label>
+                        <input type="text" asp-for="Patronymic" class="profileInput" id="Midname" disabled tabindex="3" placeholder="Отчество" value="@Model.Patronymic">
+                    </div>
+                    <div class="profileRow">
+                        <label for="Organization">Организация</label>
+                        <input type="text" asp-for="CompanyName" class="profileInput" id="Organization" disabled tabindex="4" placeholder="Организация" value="@Model.CompanyName">
+                    </div>
+                    <div class="profileRow">
+                        <p>Адрес доставки</p>
+                    </div>
+                    <div class="profileRow">
+                        <select name="address" class="addrSel" size="1">
+                        @for(int i = 0; i < @Model.Addresses.Count; i++)
+                        {
+                            <option data="@Model.Addresses[i].AddressId" value="@Model.Addresses[i].AddressId">Адрес @(i+1)</option>
+                        }
+                            <option value="Add">Добавить</option>
+                            <option selected hidden value="0">Не выбран</option>
+                        </select>
+                    </div>
+                    <div class="profileRow" id="CityDiv" style="display:none">
+                        <label for="City">Город</label>
+                        <input type="text" asp-for="City" class="profileInput" id="City" disabled tabindex="5" placeholder="Город" value="">
+                    </div>
+                    <div class="profileRow" id="AddressTxtDiv" style="display:none">
+                        <label for="AddressTxt">Адрес доставки</label>
+                        <input type="text" asp-for="Address" class="profileInput" id="AddressTxt" disabled tabindex="6" placeholder="Адрес" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="profileColumn">
+                <div class="profileRow">
+                    <p>История заказов</p>
+                </div>
+                <div class="profileRow">
+                    <table class="history">
+                        <tr class="historyHeader">
+                            <td>Номер</td>
+                            <td>Адрес</td>
+                            <td>Заказ</td>
+                            <td>Дата заказа</td>
+                        </tr>
+                    @for(int i = 0; i < @Model.Orders.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.Orders[i].OrderId</td>
+                            <td>@Model.Orders[i].</td>
+                            <td>
+                                @for(int j=0;j < @Model.Orders[i].OrderItems.Count; j++)
+                                {
+                                    @Model.Orders[i].OrderItems.ToList()[j].Items.ItemName @Model.Orders[i].OrderItems.ToList()[j].Count
+                                }
+                            </td>
+                            <td>@Model.Orders[i].OrderDate</td>
+                        </tr>
+                    }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="button" class="change" value="Изменить">
+            <input type="button" class="submitChanges" value="Сохранить">
+        </div>
+    </div>
+

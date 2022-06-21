@@ -54,7 +54,23 @@ $(function(){
             $('#City')[0].value="";
             $('#AddressTxt')[0].value="";
         }
-        else{
+        else {
+            $.ajax({
+                url: 'GetAddress',
+                type: "Post",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                dataType:"json",
+                data: {
+                    id: curOpt
+                },
+                success: function (data) {
+                    $('#City')[0].value = data.City;
+                    $('#AddressTxt')[0].value = data.Address1
+                }
+            });
             $('#City')[0].setAttribute("disabled", "");
             $('#AddressTxt')[0].setAttribute("disabled","");
         }
@@ -76,27 +92,26 @@ function AuthOpen(event){
         $(".modal").css({"visibility":"visible"});
         $("*").css({"overflow":"hidden"})
 }
-function logInFailure(e) {
-    alert("jxx");
-    e.preventDefault();
-}
 function loginSubmit (event) {
         event.preventDefault();
         var email = $('#phone').val();
         var pass = $('#password').val();
-        var check = $('#rememberMe').val();
-        alert("jxx");
+        var check = $('#rememberMe')[0].checked;
         while ($('.AuthWindowFull').firstChild) {
             $('.AuthWindowFull').removeChild(parent.firstChild);
         }
         $.ajax({
-            url: '/Account/Login/',
-            type: "POST",
-            data: JSON.stringify({
+            url: 'Account/Login',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
                 Email: email,
                 Password: pass,
                 RememberMe: check
-            }),
+            },
             success: function (data) {
                 $('.AuthWindowFull').html(data);
             }

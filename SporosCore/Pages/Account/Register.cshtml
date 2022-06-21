@@ -1,0 +1,93 @@
+﻿@model SporosCore.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Регистрация";
+    ViewBag.css = new string[4] { "footerStyle.css", "headerStyle.css", "profileStyle.css", "storeCategoryStyle.css" };
+}
+<div class="path">
+    <p class="first-path">Главная</p>
+    <div class="arrow">
+        <div></div>
+    </div>
+    <p class="current-path">Регистрация</p>
+</div>
+<div class="main">
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="profileTitle">
+            <p>Регистрация</p>
+        </div>
+        <div class="profileContainer">
+            <div class="profileColumn">
+                <div class="profileMainInfo">
+                    <div class="profileRow">
+                        <p>Основная информация</p>
+                    </div>
+                    <div class="profileRow">
+                        <label for="email">Email адрес*</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "profileInput", @id = "email", @tabindex = "1", @placeholder = "Email адрес" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="Password">Пароль*</label>
+                        @Html.TextBoxFor(m => m.Password, new { @class = "profileInput", @id = "Password", @tabindex = "2", @placeholder = "Пароль", @type = "Password" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="RepeatPassword">Повторите пароль*</label>
+                        @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "profileInput", @id = "RepearPassword", @tabindex = "3", @placeholder = "Повторите пароль", @type = "Password" })
+                    </div>
+                    <div class="profileRow">
+                        <p>Дополнительная информация</p>
+                    </div>
+                    <div class="profileRow">
+                        <label for="Surname">Фамилия</label>
+                        @Html.TextBoxFor(m => m.SecondName, new { @class = "profileInput", @id = "Surname", @tabindex = "4", @placeholder = "Фамилия" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="Name">Имя</label>
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "profileInput", @id = "Name", @tabindex = "5", @placeholder = "Имя" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="Midname">Отчество</label>
+                        @Html.TextBoxFor(m => m.Patronymic, new { @class = "profileInput", @id = "Midname", @tabindex = "6", @placeholder = "Отчество" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="Organization">Организация</label>
+                        @Html.TextBoxFor(m => m.CompanyName, new { @class = "profileInput", @id = "Organization", @tabindex = "7", @placeholder = "Организация" })
+                    </div>
+                    <div class="profileRow">
+                        <label for="PhoneNumber">Номер телефона</label>
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "profileInput", @id = "PhoneNumber", @tabindex = "8", @placeholder = "Номер телефона" })
+                    </div>
+                    <div class="profileRow">
+                        <p>Адрес доставки</p>
+                    </div>
+                    <div class="profileRow">
+                        <select name="addresses" class="addrSel" size="1">
+                            <option value="Add">Добавить</option>
+                            <option selected hidden value="0">Не выбран</option>
+                        </select>
+                    </div>
+                    <div class="profileRow" id="CityDiv" style="display:none">
+                        <label for="City" hidden>Город</label>
+                        @Html.TextBoxFor(m => m.City, new { @class = "profileInput", @id = "City", @tabindex = "9", @placeholder = "Город" })
+                    </div>
+                    <div class="profileRow" id="AddressTxtDiv" style="display:none">
+                        <label for="AddressTxt" hidden>Адрес доставки</label>
+                        @Html.TextBoxFor(m => m.Address, new { @class = "profileInput", @id = "AddressTxt", @tabindex = "10", @placeholder = "Адрес доставки" })
+                    </div>
+                    <div class="profileRow">
+                        @Html.ValidationSummary(true,"")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="submit" class="submitChanges" value="Зарегистрироваться">
+        </div>
+    }
+</div>
+
+
+@section Scripts {
+    Scripts.Render("~/js/jquery.validate*")
+}

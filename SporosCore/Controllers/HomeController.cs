@@ -33,5 +33,9 @@ namespace SporosCore.Controllers
             }
             return View("~/Pages/Store/Store.cshtml", stores);
         }
+        public ActionResult OpenAuthWindow()
+        {
+            return PartialView("~/Pages/Account/LoginPartial.cshtml");
+        }
     }
 }

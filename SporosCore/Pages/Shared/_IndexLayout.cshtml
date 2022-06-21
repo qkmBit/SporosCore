@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Sporos</title>
     <link rel="stylesheet" href="~/css/mainStyle.css" />
+    <link rel="stylesheet" href="~/css/defaultStyle.css" />
 </head>
 <body>
     <header>
-        <a href="main.html" id="HeaderLogo">
+        <a href='@Url.Action("Index","Home")' id="HeaderLogo">
             <img src="~/images/logo.svg">
         </a>
         <nav>
@@ -34,8 +35,8 @@
             <nav class="main-menu">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a href="Profile.html">Личный кабинет</a>
-                    <a href="#">Выйти</a>
+                    <a asp-action="Profile" asp-controller="Account">Личный кабинет</a>
+                    <a asp-action="Logout" asp-controller="Account">Выйти</a>
                 }
                 else
                 {
@@ -54,8 +55,8 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @RenderSection("Scripts", required: false)
+    <script src="~/js/main.js"></script>
+    
+        @RenderSection("scripts", required:false)
 </body>
 </html>
