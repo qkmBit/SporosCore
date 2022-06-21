@@ -1,0 +1,93 @@
+.container{
+    width: 90%;
+    margin-left: 5%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.store-item{
+    width: 262px;
+    height: 450px;
+    border: 0px solid white;
+    border-radius: 10px;
+    margin-right: 10px;
+    background-color: white;
+}
+.icon{
+    position: relative;
+    background: no-repeat;
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    border-radius: 10px 10px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.info{
+    width: 100%;    
+    display: flex;
+    flex-wrap: wrap;
+    height: 260px;
+}
+.btn{
+    border: 1px solid #b6b6b6;
+    cursor:pointer;
+    border-radius: 0.555rem;
+    width: 80%;
+    margin-left: 3%;
+    margin-top: auto;
+}
+.background{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #e1e1e1;
+}
+.info-text{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2px;
+    font-family: 'TTNorms', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 12pt;
+    height: min-content;
+}
+.info-big-text{
+    font-size: 12pt!important;
+    font-weight: bold;
+}
+.badge{
+    align-self: flex-start;
+    font-size: .777rem;
+    color: #474747;
+    background-color: #ededed;
+    border-radius: 1rem;
+    padding: 0.25em 0.86em;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    min-height: fit-content;
+    z-index: 5;
+    font-weight: bold;
+    margin: 5px 0px 0px 5px;
+}
+.icon-info{
+color: white;
+font-family: 'TTNorms', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+z-index: 2;
+margin: 0px 0px 5px 5px;
+}
+.item-name{
+    font-weight: bold;
+    font-size: 16pt;
+}
+.bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.42));
+    width: -webkit-fill-available;
+    height: 100%
+}

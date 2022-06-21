@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sporos</title>
+    <link rel="stylesheet" href="~/css/defaultStyle.css" />
+      @for (int i = 0; i < ViewBag.css.Length; i++)
+      {
+        <link rel="stylesheet" href="~/css/@ViewBag.css[i]">
+      }
+</head>
+<body>
+    <header>
+        <a href="main.html" id="HeaderLogo">
+            <img src="~/images/logo.svg">
+        </a>
+        <nav>
+            <a class="nav-link" href="#">О нас</a>
+            <a class="nav-link" href='@Url.Action("Store","Home")'>Каталог</a>
+            <a class="nav-link" href="#">Производство</a>
+            <a class="nav-link" href="#">Селекция</a>
+            <a class="nav-link" href="#">Новости</a>
+            <a class="nav-link" href="#">Партнеры</a>
+            <a class="nav-link" href="#">Контакты</a>
+        </nav>
+        <div class="wrapper">
+            <input type="checkbox" id="checkmenu">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <label for="checkmenu">@User.Identity.Name</label>
+            }
+            else
+            {
+                <label for="checkmenu">Не авторизован</label>
+            }
+            <div for="checkmenu" class="burger-line"></div>
+            <nav class="main-menu">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="Profile.html">Личный кабинет</a>
+                    <a href="#">Выйти</a>
+                }
+                else
+                {
+                    <a onclick="AuthOpen()">Войти</a>
+                    @Html.ActionLink("Регистрация","Register","Account")
+                }
+            </nav>
+        </div>
+    </header>
+
+    <div class="AuthWindowFull modal" style="width: 100%; height: 100%; overflow: hidden;">
+    </div>
+
+    @RenderBody()
+    <footer>
+        <div class="footer-row">
+            <a href="main.html" id="FooterLogo">
+                <img src="~/Content/images/logo.svg">
+            </a>
+            <div class="address">
+                Россия, 680000, г.&nbsp;Хабаровск,<br>
+                Хабаровский&nbsp;край,<br>
+                Гоголя&nbsp;ул.&nbsp;27, офис&nbsp;603
+            </div>
+        </div>
+        <div class="footer-row">
+            Навигация<br>
+            <nav>
+                <a href="#">О нас</a>
+                <a href="Store.html">Каталог</a>
+                <a href="#">Производство</a>
+                <a href="#">Селекция</a>
+                <a href="#">Новости</a>
+                <a href="#">Партнеры</a>
+                <a href="#">Контакты</a>
+            </nav>
+        </div>
+        <div class="footer-row contacts">
+            Офис в Хабаровске<br>
+            <a href="tel:+79249302212">+7 924 930 2212</a><br>
+            <br>
+            Офис в Благовещенске<br>
+            <a href="tel:+79249302033">+7 924 930 2033</a><br>
+            <br>
+            Офис в Уссурийске<br>
+            <a href="tel:+79249302082">+7 924 930 2082</a>
+        </div>
+        <div class="footer-row media">
+            Напишите нам<br>
+            <div class="mail">
+                <a href="mailto:semena@sporos.ag">semena@sporos.ag</a><br>
+            </div>
+            Мы в Instagram<br>
+            <div class="instagram">
+                <a href="https://www.instagram.com/sporossporos/" id="instagram">@@sporossporos</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

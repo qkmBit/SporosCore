@@ -1,0 +1,117 @@
+﻿@model List<SporosCore.Models.ViewModels.StoreViewModel>
+@{
+    ViewBag.Title = "Каталог.";
+    ViewBag.css = new string[4] { "storeStyle.css", "headerStyle.css", "storeCategoryStyle.css", "footerStyle.css" };
+}
+
+
+<div class="path">
+    <p class="first-path">Главная</p>
+    <div class="arrow">
+        <div></div>
+    </div>
+    <p class="current-path">Каталог</p>
+</div>
+<nav class="storeCategory">
+    <p class="text-sm-center nav-link active" onclick="changeCategory(event)">
+        Вся продукция
+    </p>
+    @for (int i = 0; i < Model[0].Categories.Count; i++)
+    {
+        <p class="text-sm-center nav-link" onclick="changeCategory(event)">
+            @Model[0].Categories.ElementAt(i).CategoryName
+        </p>
+    }
+    <!--
+        <p class="text-sm-center nav-link" onclick="changeCategory(event)">
+            Соя
+        </p>
+        <p class="text-sm-center nav-link" onclick="changeCategory(event)">
+            Овёс
+        </p>
+        <p class="text-sm-center nav-link" onclick="changeCategory(event)">
+            Пшеница
+        </p>
+        -->
+    </nav>
+    <div class="background">
+        <div class="container">
+            @foreach (var item in Model)
+            {
+                <div class="store-item">
+                    <div class="icon" style="background-image: url(../../Content/images/@item.Item.PicPath);">
+                        <p class="badge">@item.Item.Category.CategoryName</p>
+                        <div class="icon-info">
+                            <p class="iconProd">@item.Item.Category.CategoryName</p>
+                            <p class="item-name">@item.Item.ItemName</p>
+                            <p class="item-icon-desc">Категория Элита</p>
+                        </div>
+                        <div class="bg"></div>
+                    </div>
+                    <div class="info">
+                        <p class="info-big-text info-text">Содержание белка: @item.Item.ProteinContent</p>
+                        <p class="info-big-text info-text">Содержание масел: @item.Item.OilContent</p>
+                        <p class="info-big-text info-text">Сумма эффективных температур воздуха: @item.Item.Temperature</p>
+                        <p class="info-text">Оригинатор: @item.Item.Originator.</p>
+                        <a class="text-sm-center nav-link active btn" href="elem.html">Подробнее</a>
+                    </div>
+                </div>
+            }
+            <!--
+    <div class="store-item">
+        <div class="icon" style="background-image: url(images/batya.jpg);">
+            <p class="badge">Соя</p>
+            <div class="icon-info">
+                <p class="iconProd">Соя</p>
+                <p class="item-name">Батя</p>
+                <p class="item-icon-desc">Категория Элита</p>
+            </div>
+            <div class="bg"></div>
+        </div>
+        <div class="info">
+            <p class="info-big-text info-text">Содержание белка: 38,8%-42,5%</p>
+            <p class="info-big-text info-text">Содержание масел: 19,8%</p>
+            <p class="info-big-text info-text">Сумма эффективных температур воздуха: 2200-2400С°</p>
+            <p class="info-text">Оригинатор: ДВНИИСХ, Хабаровский край, с. Восточное. Отгрузка во все города РФ.</p>
+            <a class="text-sm-center nav-link active btn" href="elem.html">Подробнее</a>
+        </div>
+    </div>
+    <div class="store-item">
+        <div class="icon" style="background-image: url(images/Marinata.jpg);">
+            <p class="badge">Соя</p>
+            <div class="icon-info">
+                <p class="iconProd">Соя</p>
+                <p class="item-name">Марината</p>
+                <p class="item-icon-desc">Категория Элита</p>
+            </div>
+            <div class="bg"></div>
+        </div>
+        <div class="info">
+            <p class="info-big-text info-text">Содержание белка: 38%-41%</p>
+            <p class="info-big-text info-text">Содержание масел: 17%-19%</p>
+            <p class="info-big-text info-text">Сумма эффективных температур воздуха: 2000-2200С°</p>
+            <p class="info-text">Оригинатор: ДВНИИСХ, Хабаровский край, с. Восточное</p>
+            <a class="text-sm-center nav-link active btn" href="elem.html">Подробнее</a>
+        </div>
+    </div>
+    <div class="store-item">
+        <div class="icon" style="background-image: url(images/Marshal.jpg);">
+            <p class="badge">Овёс</p>
+            <div class="icon-info">
+                <p class="iconProd">Овёс</p>
+                <p class="item-name">Маршал</p>
+                <p class="item-icon-desc">Категория Элита</p>
+            </div>
+            <div class="bg"></div>
+        </div>
+        <div class="info">
+            <p class="info-big-text info-text">Содержание белка: 13%</p>
+            <p class="info-big-text info-text">Содержание лизина: 38%</p>
+            <p class="info-big-text info-text">Содержание масел: 19,8%</p>
+            <p class="info-text">Оригинатор: ХФИЦ ДВО РАН ДВНИИСХ</p>
+            <a class="text-sm-center nav-link active btn" href="elem.html">Подробнее</a>
+        </div>
+    </div>
+        -->
+        </div>
+    </div>

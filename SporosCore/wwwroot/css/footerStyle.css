@@ -1,0 +1,75 @@
+footer{
+    position: relative;
+    bottom: 0;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 100%;
+    background-color: #e1e1e1;
+    display: flex;
+    z-index: 100;
+}
+#FooterLogo{
+    position: relative;
+    width: 8%;
+    padding-top: 2px;
+    z-index: 99;
+    filter: grayscale(1) opacity(0.63);
+}
+.address{
+    font-size: 10pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.footer-row{
+    color: #8d8d8d;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+footer nav{
+    padding-top: 3px;
+    display: flex;
+    flex-direction: column;
+}
+footer a{
+    text-decoration: none;
+    color: #8d8d8d;
+    cursor: pointer;
+}
+.contacts{
+    font-size: 14pt;
+}
+.contacts a{
+    font-size: 12pt;
+}
+.media{
+    font-weight: bold;
+}
+.media a{
+    font-size: 10pt;
+    font-weight: normal;
+    padding-left: 20px;
+}
+.mail{
+    display: flex;
+}
+    .mail::before {
+        position: absolute;
+        content: " ";
+        height: 17px;
+        width: 17px;
+        filter: grayscale(1) opacity(0.63);
+        background-image: url(../images/email.svg);
+        background-size: cover;
+    }
+.instagram{
+    display: flex;
+}
+.instagram::before{
+    position: absolute;
+    content: " ";
+    height: 17px;
+    width: 17px;
+    filter: grayscale(1) opacity(0.63);
+    background-image: url(../images/instagram.svg);
+    background-size: cover;
+}
