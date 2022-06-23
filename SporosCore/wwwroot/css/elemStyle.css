@@ -5,7 +5,6 @@
     background: no-repeat;
     background-size: cover;
     filter: brightness(0.7);
-    background-image: url("images/20200813_155600.jpg");
     background-attachment: fixed;
     z-index: 1;
 }
@@ -28,6 +27,7 @@
     z-index: 2;
 }
 .item-category{
+    margin-top: 20px;
     z-index: 2;
     font-size: 16pt;
     display: flex;

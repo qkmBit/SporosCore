@@ -31,7 +31,7 @@ namespace SporosCore.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Address>(entity =>
             {
-                entity.Property(e => e.AddressId).ValueGeneratedNever();
+                entity.Property(e => e.AddressId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Address1).HasColumnName("Address");
 
@@ -128,7 +128,7 @@ namespace SporosCore.Data
             {
                 entity.HasKey(e => e.OrderId);
 
-                entity.Property(e => e.OrderId).ValueGeneratedNever();
+                entity.Property(e => e.OrderId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
@@ -157,7 +157,6 @@ namespace SporosCore.Data
 
                 entity.Property(e => e.PasswordHash).IsRequired();
 
-                entity.Property(e => e.PhoneNumber).IsRequired();
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });

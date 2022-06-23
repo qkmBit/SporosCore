@@ -40,7 +40,8 @@
     font-size: 11pt;
     color: rgb(46, 46, 46);
     font-weight: bold;
-    z-index: 4;
+    width:30%;
+    z-index: 6;
     background-color: white;
     padding-bottom: 10px;
 }

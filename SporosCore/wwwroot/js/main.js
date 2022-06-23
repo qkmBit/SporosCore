@@ -119,3 +119,50 @@ function loginSubmit (event) {
         $(".modal").css({ "visibility": "visible" });
         $("*").css({ "overflow": "hidden" });
 }
+$(function () {
+    $('.submitChanges').click(function () {
+        let needAddAddress = false;
+        curOpt = $('.addrSel :selected').val();
+        if (curOpt == "Add") {
+            needAddAddress = true;
+        }
+            $.ajax({
+                url: 'SaveProfile',
+                type: "Post",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    FirstName: $('#Name').val(),
+                    SecondName: $('#Surname').val(),
+                    Patronymic: $('#Midname').val(),
+                    CompanyName: $('#Organization').val(),
+                    City: $('#City').val(),
+                    Address: $('#AddressTxt').val(),
+                    AddressAdd: needAddAddress,
+                    AddressId: curOpt
+                },
+                success: function (data) {
+                    var newDoc = document.open("text/html", "replace");
+                    newDoc.write(data);
+                    newDoc.close();
+                }
+            });
+    })
+});
+$(function () {
+    $('.change').click(function () {
+
+        $('#Name')[0].removeAttribute("disabled");
+        $('#Surname')[0].removeAttribute("disabled");
+        $('#Midname')[0].removeAttribute("disabled");
+        $('#Organization')[0].removeAttribute("disabled");
+        $('#City')[0].removeAttribute("disabled");
+        $('#AddressTxt')[0].removeAttribute("disabled");
+    })
+});
+function goToBlock(DivName) {
+    var y = $('.' + DivName).offset().top - 65;
+    window.scrollTo(0,y);
+}

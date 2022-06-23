@@ -62,11 +62,13 @@ namespace SporosCore.Models.ViewModels
         public string CompanyName { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        public List<Address> Addresses { get; set; }
+        public List<Address> Addresses = new List<Address>();
         public string City { get; set; }
         public string Address { get; set; }
-        public List<Orders> Orders { get; set; }
-        public List<OrderItems> OrderItems { get; set; }
-        public List<Items> Items { get; set; }
+        public List<Orders> Orders = new List<Orders>();
+        public List<OrderItems> OrderItems = new List<OrderItems>();
+        public List<Items> Items = new List<Items>();
+        public bool AddressAdd { get; set; }
+        public int AddressId { get; set; }
     }
 }

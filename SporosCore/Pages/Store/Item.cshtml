@@ -1,0 +1,255 @@
+﻿@model SporosCore.Models.ViewModels.StoreViewModel
+@{
+    ViewBag.Title = "Товар\"" + @Model.Item.ItemName + "\"";
+    ViewBag.css = new string[4] { "elemStyle.css", "headerStyle.css", "storeCategoryStyle.css", "footerStyle.css" };
+}
+<div class="path">
+        <a class="first-path" asp-action="Index" asp-controller="Home">Главная</a>
+        <div class="arrow">
+            <div></div>
+        </div>
+        <a class="prev-path" asp-action="Store" asp-controller="Home">Каталог</a>
+        <div class="arrow">
+            <div></div>
+        </div>
+        <p class="current-path">@Model.Category.CategoryName</p>
+    </div>
+<nav class="storeCategory">
+    @foreach(var item in Model.Items)
+    {
+        
+        <p class="text-sm-center nav-link active" id="@item.ItemId" onclick="changeCategory(event)">@item.ItemName</p>
+    }
+    </nav>
+    <div class="background" style="background-image: url(../images/@Model.Item.BgPicPath)"></div>
+    <div class="window">
+        <div class="sortInfo">Сорт @Model.CategoryName(Model.Category.CategoryName)</div>
+        <div class="item-name">@Model.Item.ItemName</div>
+        <div class="item-category">Категория Элита</div>
+        <div class="item-originator">Оригинатор: @Model.Item.Originator</div>
+    </div>
+    <nav class="elemCategory storeCategory elemCategory--new">
+        <p class="text-sm-center nav-link" onclick="goToBlock('Advantages')">Преимущества</p>
+        <p class="text-sm-center nav-link" onclick="goToBlock('CategoryDesc')">Характеристики</p>
+        <p class="text-sm-center nav-link" onclick="goToBlock('AboutCategory')">О сорте</p>
+        <p class="text-sm-center nav-link" onclick="goToBlock('buyRow')">Покупка</p>
+    </nav>
+    <div class="Advantages">
+        <div class="infoTitle">Преимущества сорта</div>
+        <div class="advContainer">
+            <ul>
+            @foreach(var advantage in Model.Advantages)
+            {
+                <li>@advantage.Advantage</li>
+            }
+            </ul>
+            <div class="circles circles--new">						
+                <div class="svg-circle-wrap">
+                    <svg class="svg-circle" viewBox="0 0 42 42" data-total="100">
+                        <circle class="svg-circle__static-circle" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f9d632" stroke-width="3"></circle>
+                        <circle class="svg-circle__dynamic-circle" data-percent="@Model.Item.Circle1" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#208b3e" stroke-width="0" stroke-dasharray="0 100" stroke-dashoffset="25" style="transition: stroke-dasharray 2s ease-in-out 0s; stroke-dasharray: 0, 100; stroke-width: 3;"></circle>
+                    </svg>
+
+                    <div class="inside-circle">
+                        <div class="circle-icon" style="mask-image: url(../images/protein.png);background-image: url(../images/protein.png);"></div>
+                        <div class="circle-text">
+                            <small>Содержание белка</small>
+                            <span>@Model.Item.ProteinContent</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="svg-circle-wrap">
+                    <svg class="svg-circle animated" viewBox="0 0 42 42" data-total="100">
+                        <circle class="svg-circle__static-circle" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f9d632" stroke-width="3"></circle>
+                        <circle class="svg-circle__dynamic-circle" data-percent="@Model.Item.Circle2" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#208b3e" stroke-width="0" stroke-dasharray="0 100" stroke-dashoffset="25" style="transition: stroke-dasharray 2s ease-in-out 0s; stroke-dasharray: 0, 100; stroke-width: 3;"></circle>
+                    </svg>
+
+                    <div class="inside-circle">
+                        <div class="circle-icon" style="mask-image: url(../images/oil.png);background-image: url(../images/oil.png);"></div>
+                        <div class="circle-text">
+                            <small>Содержание масел</small>
+                            <span>@Model.Item.OilContent</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="svg-circle-wrap">
+                    <svg class="svg-circle animated" viewBox="0 0 42 42" data-total="100">
+                        <circle class="svg-circle__static-circle" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f9d632" stroke-width="3"></circle>
+                        <circle class="svg-circle__dynamic-circle" data-percent="@Model.Item.Circle3" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#208b3e" stroke-width="0" stroke-dasharray="0 100" stroke-dashoffset="25"></circle>
+                    </svg>
+                @if (Model.Item.CategoryId == 1)
+                {
+                    <div class="inside-circle">
+                        <div class="circle-icon" style="mask-image: url(../images/thermometer.png);background-image: url(../images/thermometer.png);"></div>
+                        <div class="circle-text">
+                            <small>Сумма эффективных температур воздуха</small>
+                            <span>@Model.Item.Temperature</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="inside-circle">
+                        <div class="circle-icon" style="mask-image: url(../images/lysine.svg);background-image: url(../images/lysine.svg);"></div>
+                        <div class="circle-text">
+                            <small>Содержание лизина</small>
+                            <span>@Model.Item.LysineContent</span>
+                        </div>
+                    </div>
+                }
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="CategoryDesc">
+        <div class="infoTitle">Описание сорта</div>
+        <div class="advContainer">
+            <div class="tableContainer">
+                <div class="descTable">
+                    <div class="descRow">
+                        <p>Группа созреваний</p>
+                        <p>@Model.MaturationGroup.MaturationGroupName</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Вегетационный период, дней</p>
+                        <p>@Model.Item.GrowingSeason</p>
+                    </div>
+                @if (Model.Item.CategoryId == 1)
+                {
+                    <div class="descRow">
+                        <p>Максимальная урожайность</p>
+                        <p>@Model.Item.MaxYield</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Норма высева, тыc. всхожих семян/га</p>
+                        <p>@Model.Item.SeedingRate</p>
+                    </div>
+                }
+                    <div class="descRow">
+                        <p>Высота растений, см</p>
+                        <p>@Model.Item.PlantsHeight</p>
+                    </div>
+                @if (Model.Item.CategoryId == 2)
+                {
+                    <div class="descRow">
+                        <p>Кущение продуктивное, стеблей</p>
+                        <p>@Model.Item.Tillering</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Количество колосков, шт</p>
+                        <p>@Model.Item.SpikeletsCount</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Количество зерен с метелки, шт</p>
+                        <p>@Model.Item.GrainsCount</p>
+                    </div>
+                }
+                </div>
+            </div>
+            <div class="tableContainer">
+                <div class="descTable">
+                @if (Model.Item.CategoryId == 1)
+                {
+                    <div class="descRow">
+                        <p>Высота прикрепления нижнего боба, см</p>
+                        <p>@Model.Item.GrainsCount</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Тип роста растений</p>
+                        <p>@Model.GrowthType.GrowthTypeName</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Ветвистость</p>
+                        <p>@Model.Item.Branching</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Окраска</p>
+                        <p>@Model.Item.Coloring</p>
+                    </div>
+                }
+                @if (Model.Item.CategoryId == 2)
+                {
+                    <div class="descRow">
+                        <p>Пленчатость, %</p>
+                        <p>@Model.Item.Filminess</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Натура зерна, г/л</p>
+                        <p>@Model.Item.GrainNature</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Урожайность зеленой массы, т/га</p>
+                        <p>@Model.Item.DryMatter</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Сухого вещества в зеленой массе, т/га</p>
+                        <p>@Model.Item.SeedingRate</p>
+                    </div>
+                    <div class="descRow">
+                        <p>Потенциальная семенная продуктивность, т/га</p>
+                        <p>@Model.Item.PotentialProductivity</p>
+                    </div>
+                }
+                </div>
+            </div>
+            <div class="tableContainer">
+            @if (Model.Item.CategoryId == 1)
+            {
+                <div class="descPhoto" style="background-image: url(../images/IMG_1016_1.jpg)"></div>
+            }
+            @if (Model.Item.CategoryId == 2)
+            {
+                <div class="descPhoto" style="background-image: url(../images/pole_15_870x400.jpg)"></div>
+            }
+            </div>
+            <div class="tableContainer">
+                <div class="descTable">
+                @if (Model.Item.CategoryId == 1)
+                {
+                    <div class="descRow descTableHeader">
+                        <p class="descTableHeader">Норма высева, тыс. всхожих семян/га</p>
+                    </div>
+                    <div class="descRow descRowH descTableHeader">
+                        <p>Сев на гребне</p>
+                        <p class="descRowH">Сплошной сев</p>
+                    </div>
+                    <div class="descRow descRowH">
+                        <p>@Model.Item.Tillering</p>
+                        <p class="descRowH">@Model.Item.SpikeletsCount</p>
+                    </div>
+                }
+                @if (Model.Item.CategoryId == 2)
+                {
+                    <div class="descRow descTableHeader">
+                        <p class="descTableHeader">Норма высева, млн. всхожих зерен/га</p>
+                    </div>
+                    <div class="descRow descRowH">
+                        <p style="width: 100%">@Model.Item.MaxYield</p>
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="AboutCategory">
+        <div class="infoTitle">О сорте "Батя"</div>
+        <div class="advContainer">
+            <p class="tableContainer"> 
+                @Model.Item.About
+            </p>
+            <div class="tableContainer photoContainer">
+                <div class="photoCol">
+                    <div class="descPhoto" style="background-image: url(../images/@Model.Item.InfoPic1)"></div>
+                </div>
+                <div class="photoCol">
+                    <div class="descPhoto descPhoto-50" style="background-image: url(../images/@Model.Item.InfoPic2)"></div>
+                    <div class="descPhoto descPhoto-50" style="background-image: url(../images/@Model.Item.InfoPic3)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buyRow">
+        <button class="buyBtn">Приобрести</button>
+    </div>

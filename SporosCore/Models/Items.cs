@@ -38,6 +38,13 @@ namespace SporosCore.Models
         public string GrainNature { get; set; }
         public string DryMatter { get; set; }
         public string PotentialProductivity { get; set; }
+        public string BgPicPath { get; set; }
+        public int Circle1 { get; set; }
+        public int Circle2 { get; set; }
+        public int Circle3 { get; set; }
+        public string InfoPic1 { get; set; }
+        public string InfoPic2 { get; set; }
+        public string InfoPic3 { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual GrowthType GrowthType { get; set; }

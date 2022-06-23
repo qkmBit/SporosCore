@@ -51,9 +51,16 @@
                     <div class="info">
                         <p class="info-big-text info-text">Содержание белка: @item.Item.ProteinContent</p>
                         <p class="info-big-text info-text">Содержание масел: @item.Item.OilContent</p>
+                    @if (item.Item.Category.CategoryId == 1)
+                    {
                         <p class="info-big-text info-text">Сумма эффективных температур воздуха: @item.Item.Temperature</p>
+                    }
+                    else
+                    {
+                        <p class="info-big-text info-text">Содержание лизина: @item.Item.LysineContent</p>
+                    }
                         <p class="info-text">Оригинатор: @item.Item.Originator.</p>
-                        <a class="text-sm-center nav-link active btn" href="elem.html">Подробнее</a>
+                        <a class="text-sm-center nav-link active btn" href="/Store/Item?id=@item.Item.ItemId">Подробнее</a>
                     </div>
                 </div>
             }

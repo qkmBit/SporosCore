@@ -147,5 +147,45 @@ namespace SporosCore.Controllers
             var address = context.Address.Where(i=>i.AddressId==int.Parse(id)).FirstOrDefault();
             return JsonConvert.SerializeObject(address);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Account/SaveProfile")]
+        public IActionResult SaveProfile(ProfileViewModel model)
+        {
+            Users user = _userManager.FindByEmailAsync(User.Identity.Name).Result;
+            user.CompanyName = model.CompanyName;
+            user.FirstName = model.FirstName;
+            user.Patronymic = model.Patronymic;
+            user.PhoneNumber = model.PhoneNumber;
+            user.SecondName = model.SecondName;
+            var result = _userManager.UpdateAsync(user).Result;
+            if (result.Succeeded)
+            {
+                if (model.AddressAdd && model.City != null && model.Address != null)
+                {
+                    Address address = new Address { City = model.City, Address1 = model.Address, UserId = user.Id };
+                    var adrressRes = context.Address.AddAsync(address).IsCompletedSuccessfully;
+                    if (!adrressRes)
+                    {
+                        ModelState.AddModelError("", "Адрес не был добавлен");
+                        return View("~/Pages/Account/Profile.cshtml", model);
+                    }
+                }
+                else if (model.City != null && model.Address != null)
+                {
+                    var addr = user.Address.Where(a => a.AddressId == model.AddressId).FirstOrDefault();
+                    addr.Address1 = model.Address;
+                    addr.City = model.City;
+                    context.Address.Update(addr);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Не удалось обновить пользователя.");
+                return View("~/Pages/Account/Profile.cshtml", model);
+            }
+            context.SaveChanges();
+            return RedirectToAction("Profile", "Account");
+        }
     }
 }
