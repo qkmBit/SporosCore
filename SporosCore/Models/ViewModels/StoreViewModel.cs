@@ -16,6 +16,7 @@ namespace SporosCore.Models.ViewModels
         public List<Category> Categories { get; set; }
         public Category Category { get; set; }
         public GrowthType GrowthType { get; set; }
+        public string CategoryId { get; set; }
         public StoreViewModel(ApplicationDbContext context)
         {
             this.context = context;

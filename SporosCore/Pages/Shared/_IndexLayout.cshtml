@@ -21,7 +21,7 @@
             <a class="nav-link" href="#">Партнеры</a>
             <a class="nav-link" href="#">Контакты</a>
         </nav>
-        <div class="wrapper">
+        <div class="wrapper" onclick="changeCheck()">
             <input type="checkbox" id="checkmenu">
             @if (User.Identity.IsAuthenticated)
             {
@@ -51,7 +51,6 @@
     </div>
 
     @RenderBody()
-    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

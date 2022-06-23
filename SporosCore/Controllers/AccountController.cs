@@ -11,6 +11,7 @@ using SporosCore.Models.ViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace SporosCore.Controllers
 {
@@ -28,7 +29,6 @@ namespace SporosCore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -36,6 +36,12 @@ namespace SporosCore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    var user = _userManager.FindByEmailAsync(model.Email).Result;
+                    var cart = context.Cart.Where(o => o.UserId == user.Id);
+                    var cartItems = context.CartItems.Where(oi => oi.CartId == cart.FirstOrDefault().CartId);
+                    var count = cartItems.Count().ToString();
+                    await _userManager.AddClaimAsync(user, new Claim("CartCount", count));
+                    var claims = User.Claims.ToList();
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -79,8 +85,10 @@ namespace SporosCore.Controllers
                 {
                     if (model.City != null && model.Address != null) user.Address.Add(new Address { City = model.City, Address1 = model.Address, UserId = user.Id });
 
+                    Cart сart = new Cart() { UserId = user.Id };
                     await context.SaveChangesAsync();
                     await _signInManager.SignInAsync(user, false);
+                    await _userManager.AddClaimAsync(user, new Claim("CartCount", "0"));
 
                     // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
                     // Отправка сообщения электронной почты с этой ссылкой
@@ -112,16 +120,20 @@ namespace SporosCore.Controllers
         public IActionResult Profile()
         {
             Users user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-            var orders = context.Orders.Where(d => d.UserId == user.Id);
+            var orders = context.Orders.Where(d => d.UserId == user.Id).ToList();
             List<OrderItems> orderItems = new List<OrderItems>();
             List<Items> items = new List<Items>();
+            List<Category> categories = new List<Category>();
             var addresses = context.Address.Where(d => d.UserId == user.Id);
             foreach(var order in orders)
             {
-                foreach (var item in context.OrderItems.Where(i => i.OrderId == order.OrderId))
+                var orderItemsTemp = context.OrderItems.Where(i => i.OrderId == order.OrderId).ToList();
+                foreach (var item in orderItemsTemp)
                 {
                     orderItems.Add(item);
-                    items.Add(context.Items.Where(it => it.ItemId == item.ItemId).FirstOrDefault());
+                    var fic = context.Items.Where(it => it.ItemId == item.ItemId).FirstOrDefault();
+                    items.Add(fic);
+                    categories.Add(context.Category.Where(c => c.CategoryId == fic.CategoryId).FirstOrDefault());
                 }
             }
             ProfileViewModel model = new ProfileViewModel { Email = user.Email };
@@ -136,6 +148,7 @@ namespace SporosCore.Controllers
                 model.Orders = orders.ToList();
                 model.OrderItems = orderItems;
                 model.Items = items;
+                model.Categories = categories;
             }
             return View("~/Pages/Account/Profile.cshtml", model);
         }
@@ -150,17 +163,22 @@ namespace SporosCore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Account/SaveProfile")]
-        public IActionResult SaveProfile(ProfileViewModel model)
+        public  IActionResult SaveProfile(ProfileViewModel model)
         {
             Users user = _userManager.FindByEmailAsync(User.Identity.Name).Result;
+            var addrs = context.Address.Where(u => u.UserId == user.Id).ToList();
             user.CompanyName = model.CompanyName;
             user.FirstName = model.FirstName;
             user.Patronymic = model.Patronymic;
             user.PhoneNumber = model.PhoneNumber;
             user.SecondName = model.SecondName;
+            user.Email = model.Email;
+            user.UserName = model.Email;
+            user.Address = (ICollection<Address>)addrs;
             var result = _userManager.UpdateAsync(user).Result;
             if (result.Succeeded)
             {
+                _signInManager.RefreshSignInAsync(user);
                 if (model.AddressAdd && model.City != null && model.Address != null)
                 {
                     Address address = new Address { City = model.City, Address1 = model.Address, UserId = user.Id };
@@ -184,6 +202,16 @@ namespace SporosCore.Controllers
                 ModelState.AddModelError("", "Не удалось обновить пользователя.");
                 return View("~/Pages/Account/Profile.cshtml", model);
             }
+            context.SaveChanges();
+            return RedirectToAction("Profile", "Account");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Account/DeleteAddress")]
+        public IActionResult DeleteAddress([FromForm]int id)
+        {
+            var address = context.Address.Where(a => a.AddressId == id).FirstOrDefault();
+            var result = context.Address.Remove(address);
             context.SaveChanges();
             return RedirectToAction("Profile", "Account");
         }

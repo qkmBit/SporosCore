@@ -26,9 +26,42 @@ namespace SporosCore.Data
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<OrderItems> OrderItems { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<Cart> Cart { get; set; }
+        public virtual DbSet<CartItems> CartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.Property(e => e.CartId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UserId)
+                .IsRequired()
+                .HasMaxLength(100);
+
+                entity.HasOne(d => d.Users)
+                .WithMany(p => p.Carts)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cart_AspNetUsers");
+            });
+            modelBuilder.Entity<CartItems>(entity =>
+            {
+                entity.Property(e => e.CartId).ValueGeneratedOnAdd();
+
+                entity.HasKey(e => new { e.ItemId, e.CartId });
+
+                entity.HasOne(d => d.Cart)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(d => d.CartId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CartItems_Cart");
+                entity.HasOne(d => d.Items)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(p => p.ItemId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CartItems_Items");
+            });
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.Property(e => e.AddressId).ValueGeneratedOnAdd();
@@ -136,6 +169,11 @@ namespace SporosCore.Data
                 .IsRequired()
                 .HasMaxLength(100);
 
+                entity.HasOne(d => d.Address)
+                .WithMany(p => p.Orders)
+                .HasForeignKey(d => d.AddressId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Orders_Address");
                 entity.HasOne(d => d.User)
                 .WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)

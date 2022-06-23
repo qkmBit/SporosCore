@@ -1,8 +1,23 @@
-function changeCategory(event){
+function changeCategory(event) {
+    var id = event.currentTarget.id;
     var elem = document.getElementsByClassName('active')[0];
     //elem.classList.remove('Current');
     elem.className="flex-sm-fill text-sm-center nav-link";
-    event.currentTarget.className ="flex-sm-fill text-sm-center nav-link active"; 
+    event.currentTarget.className = "flex-sm-fill text-sm-center nav-link active";
+    $.ajax({
+        url: 'ChangeStore',
+        type: "Post",
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("XSRF-TOKEN",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        data: {
+            id: id
+        },
+        success: function (data) {
+            $(".swap").html(data);
+        }
+    });
 }
 $(document).ready(function(){
     var elements = $('.svg-circle__dynamic-circle');
@@ -52,7 +67,8 @@ $(function(){
             $('#City')[0].removeAttribute("disabled");
             $('#AddressTxt')[0].removeAttribute("disabled");
             $('#City')[0].value="";
-            $('#AddressTxt')[0].value="";
+            $('#AddressTxt')[0].value = "";
+            $('#delBtnDiv').css("display", "none");
         }
         else {
             $.ajax({
@@ -72,7 +88,8 @@ $(function(){
                 }
             });
             $('#City')[0].setAttribute("disabled", "");
-            $('#AddressTxt')[0].setAttribute("disabled","");
+            $('#AddressTxt')[0].setAttribute("disabled", "");
+            $('#delBtnDiv').css("display", "flex");
         }
     })
 });
@@ -122,9 +139,13 @@ function loginSubmit (event) {
 $(function () {
     $('.submitChanges').click(function () {
         let needAddAddress = false;
+        let picked = false;
         curOpt = $('.addrSel :selected').val();
         if (curOpt == "Add") {
             needAddAddress = true;
+        }
+        else if (curOpt == "NotPicked") {
+            picked = true;
         }
             $.ajax({
                 url: 'SaveProfile',
@@ -140,7 +161,10 @@ $(function () {
                     CompanyName: $('#Organization').val(),
                     City: $('#City').val(),
                     Address: $('#AddressTxt').val(),
+                    Email: $('#Email').val(),
+                    PhoneNumber: $('#Phone').val(),
                     AddressAdd: needAddAddress,
+                    Picked: picked,
                     AddressId: curOpt
                 },
                 success: function (data) {
@@ -152,6 +176,27 @@ $(function () {
     })
 });
 $(function () {
+    $('.del').click(function () {
+        curOpt = $('.addrSel :selected').val();
+        $.ajax({
+            url: 'DeleteAddress',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                AddressId: curOpt
+            },
+            success: function (data) {
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data);
+                newDoc.close();
+            }
+        });
+    })
+});
+$(function () {
     $('.change').click(function () {
 
         $('#Name')[0].removeAttribute("disabled");
@@ -160,9 +205,14 @@ $(function () {
         $('#Organization')[0].removeAttribute("disabled");
         $('#City')[0].removeAttribute("disabled");
         $('#AddressTxt')[0].removeAttribute("disabled");
+        $('#Phone')[0].removeAttribute("disabled");
+        $('#Email')[0].removeAttribute("disabled");
     })
 });
 function goToBlock(DivName) {
     var y = $('.' + DivName).offset().top - 65;
     window.scrollTo(0,y);
+}
+function changeCheck() {
+    $('#checkmenu')[0].checked = !$('#checkmenu')[0].checked
 }

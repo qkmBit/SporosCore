@@ -7,11 +7,12 @@
     justify-content: space-around;
 }
 .store-item{
+    margin-top: 20px;
     width: 262px;
     height: 450px;
     border: 0px solid white;
     border-radius: 10px;
-    margin-right: 10px;
+    margin-right: 40px;
     background-color: white;
 }
 .icon{

@@ -6,21 +6,38 @@
 
 
 <div class="path">
-    <p class="first-path">Главная</p>
+    <a class="first-path" asp-action="Index" asp-controller="Home">Главная</a>
     <div class="arrow">
         <div></div>
     </div>
     <p class="current-path">Каталог</p>
 </div>
 <nav class="storeCategory">
-    <p class="text-sm-center nav-link active" onclick="changeCategory(event)">
-        Вся продукция
-    </p>
+    @if (Model[0].CategoryId == "All")
+    {
+        <p class="text-sm-center nav-link active" id="All" onclick="changeCategory(event)">
+            Вся продукция
+        </p>
+    }
+    else
+    {
+        <p class="text-sm-center nav-link" id="All" onclick="changeCategory(event)">
+            Вся продукция
+        </p>
+    }
     @for (int i = 0; i < Model[0].Categories.Count; i++)
     {
-        <p class="text-sm-center nav-link" onclick="changeCategory(event)">
+        if (@Model[0].CategoryId!= "All" && int.Parse(@Model[0].CategoryId) == @Model[0].Categories.ElementAt(i).CategoryId)
+        {
+            <p class="text-sm-center nav-link active" id="@Model[0].Categories.ElementAt(i).CategoryId" onclick="changeCategory(event)">
             @Model[0].Categories.ElementAt(i).CategoryName
         </p>
+        }
+        else{
+        <p class="text-sm-center nav-link" id="@Model[0].Categories.ElementAt(i).CategoryId" onclick="changeCategory(event)">
+            @Model[0].Categories.ElementAt(i).CategoryName
+        </p>
+        }
     }
     <!--
         <p class="text-sm-center nav-link" onclick="changeCategory(event)">

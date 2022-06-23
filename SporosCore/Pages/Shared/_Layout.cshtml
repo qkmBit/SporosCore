@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,7 +25,7 @@
             <a class="nav-link" href="#">Партнеры</a>
             <a class="nav-link" href="#">Контакты</a>
         </nav>
-        <div class="wrapper">
+        <div class="wrapper" onclick="changeCheck()">
             <input type="checkbox" id="checkmenu">
             @if (User.Identity.IsAuthenticated)
             {
@@ -39,6 +40,16 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <a asp-action="Profile" asp-controller="Account">Личный кабинет</a>
+                    @if (User.IsInRole("employee"))
+                    {
+                        <a asp-action="Orders" asp-controller="Employee">Заказы</a>
+                        <a asp-action="Clients" asp-controller="Employee">Клиенты</a>
+                       @if(User.IsInRole("admin"))
+                        {
+                            <a asp-action="Employees" asp-controller="Admin">Работники</a>
+                            <a asp-action="Spravochnik" asp-controller="Admin">Справочники</a>
+                        }
+                    }
                     <a asp-controller="Account" asp-action="Logout">Выйти</a>
                 }
                 else
@@ -52,8 +63,16 @@
 
     <div class="AuthWindowFull modal" style="width: 100%; height: 100%; overflow: hidden;">
     </div>
-
+    <div class="swap">
     @RenderBody()
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="cartIcon">
+            <img src="~/images/cart.png">
+        </div>
+        <div class="cartCountIcon">@User.Claims.Where(u=> u.Type=="CartCount").Select(u=>u.Value).FirstOrDefault()</div>
+    }
     <footer>
         <div class="footer-row">
             <a href="main.html" id="FooterLogo">

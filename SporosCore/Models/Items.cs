@@ -11,6 +11,7 @@ namespace SporosCore.Models
         {
             this.ItemAdvantages = new HashSet<ItemAdvantages>();
             this.OrderItems = new HashSet<OrderItems>();
+            this.CartItems = new HashSet<CartItems>();
         }
 
         public int ItemId { get; set; }
@@ -46,6 +47,7 @@ namespace SporosCore.Models
         public string InfoPic2 { get; set; }
         public string InfoPic3 { get; set; }
 
+        public virtual ICollection<CartItems> CartItems { get; set; }
         public virtual Category Category { get; set; }
         public virtual GrowthType GrowthType { get; set; }
         public virtual ICollection<ItemAdvantages> ItemAdvantages { get; set; }

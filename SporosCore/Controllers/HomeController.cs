@@ -29,9 +29,33 @@ namespace SporosCore.Controllers
             {
                 StoreViewModel vm = new StoreViewModel(context);
                 vm.get(item.ItemId);
+                vm.CategoryId = "All";
                 stores.Add(vm);
             }
             return View("~/Pages/Store/Store.cshtml", stores);
+        }
+        [HttpPost]
+        [Route("Home/ChangeStore")]
+        public IActionResult ChangeStore([FromForm]string id)
+        {
+            List<Items> items = new List<Items>();
+            if (id != "All")
+            {
+                items = context.Items.Where(i => i.CategoryId == int.Parse(id)).ToList();
+            }
+            else
+            {
+                items = context.Items.ToList();
+            }
+            List<StoreViewModel> stores = new List<StoreViewModel>();
+            foreach (var item in items)
+            {
+                StoreViewModel vm = new StoreViewModel(context);
+                vm.get(item.ItemId);
+                vm.CategoryId = id;
+                stores.Add(vm);
+            }
+            return PartialView("~/Pages/Store/Store.cshtml", stores);
         }
         public ActionResult OpenAuthWindow()
         {

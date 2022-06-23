@@ -12,12 +12,15 @@ namespace SporosCore.Models
         {
             this.Address = new HashSet<Address>();
             this.Orders = new HashSet<Orders>();
+            this.Carts = new HashSet<Cart>();
         }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
         public string CompanyName { get; set; }
 
+
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Address> Address { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
     }

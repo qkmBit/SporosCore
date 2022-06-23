@@ -7,7 +7,7 @@
     position: relative;
     z-index: 5;
 }
-.storeCategory p{
+.storeCategory p, .storeCategory a{
     border-radius: 0.555rem;
     color: #adadad;
     border: 1px solid #b6b6b6;
@@ -19,7 +19,7 @@
     height: 100%;
     cursor:pointer;
 }
-.storeCategory p:hover{
+.storeCategory p, .storeCategory a:hover{
     color: black;
     border: 1px solid rgba(70, 190, 70, 0.8);
 }

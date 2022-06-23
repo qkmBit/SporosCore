@@ -5,7 +5,7 @@
 }
 @Html.AntiForgeryToken()
 <div class="path">
-        <p class="first-path">Главная</p>
+        <a class="first-path" asp-action="Index" asp-controller="Home">Главная</a>
         <div class="arrow">
             <div></div>
         </div>
@@ -38,6 +38,17 @@
                         <input type="text" asp-for="CompanyName" class="profileInput" id="Organization" disabled tabindex="4" placeholder="Организация" value="@Model.CompanyName">
                     </div>
                     <div class="profileRow">
+                        <p>Контактная информация</p>
+                    </div>
+                    <div class="profileRow">
+                        <label for="Email">Электронная почта</label>
+                        <input type="text" asp-for="Email" class="profileInput" id="Email" disabled tabindex="5" placeholder="Электронная почта" value="@Model.Email">
+                    </div>
+                    <div class="profileRow">
+                        <label for="Phone">Номер телефона</label>
+                        <input type="text" asp-for="PhoneNumber" class="profileInput" id="Phone" disabled tabindex="6" placeholder="Номер телефона" value="@Model.PhoneNumber">
+                    </div>
+                    <div class="profileRow">
                         <p>Адрес доставки</p>
                     </div>
                     <div class="profileRow">
@@ -47,16 +58,19 @@
                             <option data="@Model.Addresses[i].AddressId" value="@Model.Addresses[i].AddressId">Адрес @(i+1)</option>
                         }
                             <option value="Add">Добавить</option>
-                            <option selected hidden value="0">Не выбран</option>
+                            <option selected hidden value="NotPicked">Не выбран</option>
                         </select>
                     </div>
                     <div class="profileRow" id="CityDiv" style="display:none">
                         <label for="City">Город</label>
-                        <input type="text" asp-for="City" class="profileInput" id="City" disabled tabindex="5" placeholder="Город" value="">
+                        <input type="text" asp-for="City" class="profileInput" id="City" disabled tabindex="7" placeholder="Город" value="">
                     </div>
                     <div class="profileRow" id="AddressTxtDiv" style="display:none">
                         <label for="AddressTxt">Адрес доставки</label>
-                        <input type="text" asp-for="Address" class="profileInput" id="AddressTxt" disabled tabindex="6" placeholder="Адрес" value="">
+                        <input type="text" asp-for="Address" class="profileInput" id="AddressTxt" disabled tabindex="8" placeholder="Адрес" value="">
+                    </div>
+                    <div class="profileRow" id="delBtnDiv" style="display:none; justify-content: center;">
+                        <input type="button" id="delBtn" class="del" value="Удалить">
                     </div>
                 </div>
             </div>
@@ -76,12 +90,12 @@
                     {
                         <tr>
                             <td>@Model.Orders[i].OrderId</td>
-                            <td>@Model.Orders[i].</td>
+                            <td>@Model.Orders[i].Address.Address1</td>
                             <td>
                                 @for(int j=0;j < @Model.Orders[i].OrderItems.Count; j++)
                                 {
-                                    @Model.Orders[i].OrderItems.ToList()[j].Items.ItemName @Model.Orders[i].OrderItems.ToList()[j].Count
-                                }
+                                    <p style="font-size: 11pt; color: #858282; font-weight: 400;">@Model.Orders[i].OrderItems.ToList()[j].Items.Category.CategoryName @Model.Orders[i].OrderItems.ToList()[j].Items.ItemName, @Model.Orders[i].OrderItems.ToList()[j].Count кг. </p>
+                            }
                             </td>
                             <td>@Model.Orders[i].OrderDate</td>
                         </tr>

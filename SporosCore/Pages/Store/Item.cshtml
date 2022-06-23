@@ -3,6 +3,7 @@
     ViewBag.Title = "Товар\"" + @Model.Item.ItemName + "\"";
     ViewBag.css = new string[4] { "elemStyle.css", "headerStyle.css", "storeCategoryStyle.css", "footerStyle.css" };
 }
+@Html.AntiForgeryToken()
 <div class="path">
         <a class="first-path" asp-action="Index" asp-controller="Home">Главная</a>
         <div class="arrow">
@@ -17,8 +18,14 @@
 <nav class="storeCategory">
     @foreach(var item in Model.Items)
     {
-        
-        <p class="text-sm-center nav-link active" id="@item.ItemId" onclick="changeCategory(event)">@item.ItemName</p>
+        @if (item.ItemName == Model.Item.ItemName)
+        {
+            <p class="text-sm-center nav-link active" href="/Store/Item?id=@item.ItemId">@item.ItemName</p>
+        }
+        else
+        {
+            <a class="text-sm-center nav-link" href="/Store/Item?id=@item.ItemId">@item.ItemName</a>
+        }
     }
     </nav>
     <div class="background" style="background-image: url(../images/@Model.Item.BgPicPath)"></div>
@@ -75,7 +82,7 @@
                 <div class="svg-circle-wrap">
                     <svg class="svg-circle animated" viewBox="0 0 42 42" data-total="100">
                         <circle class="svg-circle__static-circle" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f9d632" stroke-width="3"></circle>
-                        <circle class="svg-circle__dynamic-circle" data-percent="@Model.Item.Circle3" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#208b3e" stroke-width="0" stroke-dasharray="0 100" stroke-dashoffset="25"></circle>
+                        <circle class="svg-circle__dynamic-circle" data-percent="@Model.Item.Circle3" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#208b3e" stroke-width="0" stroke-dasharray="0 100" stroke-dashoffset="25" style="transition: stroke-dasharray 2s ease-in-out 0s; stroke-dasharray: 0, 100; stroke-width: 3;"></circle>
                     </svg>
                 @if (Model.Item.CategoryId == 1)
                 {
@@ -165,7 +172,7 @@
                     </div>
                     <div class="descRow">
                         <p>Окраска</p>
-                        <p>@Model.Item.Coloring</p>
+                        <p>@Html.Raw(@Model.Item.Coloring)</p>
                     </div>
                 }
                 @if (Model.Item.CategoryId == 2)
@@ -237,7 +244,7 @@
         <div class="infoTitle">О сорте "Батя"</div>
         <div class="advContainer">
             <p class="tableContainer"> 
-                @Model.Item.About
+                @Html.Raw(@Model.Item.About)
             </p>
             <div class="tableContainer photoContainer">
                 <div class="photoCol">
