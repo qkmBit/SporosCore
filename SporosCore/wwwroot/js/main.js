@@ -24,7 +24,7 @@ $(document).ready(function(){
     var elemCategory = $('.elemCategory');
     var Advantages = $('.Advantages');
     $counter=0;
-    $(window).scroll(function(){
+    $(window).scroll(function (e) {
         var scroll = $(window).scrollTop() + $(window).height();
         var scrollSec = $(window).scrollTop() + 65;
         var offsetCircle = elements.offset().top;
@@ -118,7 +118,7 @@ function loginSubmit (event) {
             $('.AuthWindowFull').removeChild(parent.firstChild);
         }
         $.ajax({
-            url: 'Account/Login',
+            url: "../Account/Login",
             type: "Post",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
@@ -209,10 +209,114 @@ $(function () {
         $('#Email')[0].removeAttribute("disabled");
     })
 });
+$(function () {
+    $('.send').click(function () {
+        $.ajax({
+            url: 'Email',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {},
+            success: function (data) {
+                $('.reqEmailConfirm').text(data)
+            }
+        });
+    })
+});
+$(function () {
+    $('.cartIcon').click(function () {
+        $('#cartCheck')[0].checked = !$('#cartCheck')[0].checked;
+        if ($('#cartCheck')[0].checked) {
+            $.ajax({
+                url: '../Home/Cart',
+                type: "Post",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+
+                },
+                success: function (data) {
+                    $('.cart').html(data);
+                    $('.cart').css({ "display": "flex" });
+                    $('.cart').css({ "height": "50%" });
+                    $('.cart').css({ "padding": "5px" });
+                    $('.cart').css({ "border": "black solid 1px" });
+                    $('.cart').css({ "width": "25%" });
+                }
+            });
+        }
+        else {
+            $('.cart').html("");
+            $('.cart').css({ "padding": "0px" });
+            $('.cart').css({ "height": "0px" });
+            $('.cart').css({ "width": "0px" });
+            $('.cart').delay(5000).css({ "border": "none" });
+        }
+    })
+});
+$(document).on('wheel', function (e) {
+    if (e.originalEvent.wheelDelta <= 0 && !$('#cartCheck')[0].checked) {
+        $('.cartIcon').css({ 'margin-bottom': '-90px' });
+        $('.cartCountIcon').css({ 'margin-bottom': '-90px' });
+    }
+    else {
+        $('.cartIcon').css({ 'margin-bottom': '5px' });
+        $('.cartCountIcon').css({ 'margin-bottom': '5px' });
+    }
+});
+$(document).ready(function () {
+    $(window).scroll(function (e) {
+    })
+});
 function goToBlock(DivName) {
     var y = $('.' + DivName).offset().top - 65;
     window.scrollTo(0,y);
 }
 function changeCheck() {
     $('#checkmenu')[0].checked = !$('#checkmenu')[0].checked
-}
+};
+$(function () {
+    $(document).on("click", '.cartDelBtn' , function () {
+        var count = $('.cartCountIcon').html();
+        $.ajax({
+            url: '../Store/DeleteFromCart',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                itemId: (this).attributes.itemId.nodeValue,
+                cartId: (this).attributes.cartId.nodeValue
+            },
+            success: function (data) {
+                $('.cart').html(data);
+                $('.cartCountIcon').html(count - 1);
+            }
+        });
+    })
+});
+$(function () {
+    $('.buyBtn').click(function (e) {
+        $.ajax({
+            url: '../Store/AddToCart',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                id: e.currentTarget.id
+            },
+            success: function (data) {
+                $('.cartCountIcon').html(data);
+                $('.cartIcon').css({ 'margin-bottom': '5px' });
+                $('.cartCountIcon').css({ 'margin-bottom': '5px' });
+            }
+        });
+    })
+});

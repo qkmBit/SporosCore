@@ -40,8 +40,8 @@ namespace SporosCore.Controllers
                     var cart = context.Cart.Where(o => o.UserId == user.Id);
                     var cartItems = context.CartItems.Where(oi => oi.CartId == cart.FirstOrDefault().CartId);
                     var count = cartItems.Count().ToString();
-                    await _userManager.AddClaimAsync(user, new Claim("CartCount", count));
-                    var claims = User.Claims.ToList();
+                    if(User.Claims.Where(u=>u.Type=="CartCount").Count()==0)
+                        await _userManager.AddClaimAsync(user, new Claim("CartCount", count));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -80,21 +80,18 @@ namespace SporosCore.Controllers
                 if (model.CompanyName != null) user.CompanyName = model.CompanyName;
                 if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
                 var result = await _userManager.CreateAsync(user, model.Password);
-
                 if (result.Succeeded)
                 {
                     if (model.City != null && model.Address != null) user.Address.Add(new Address { City = model.City, Address1 = model.Address, UserId = user.Id });
-
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    EmailService emailService = new EmailService();
+                    await emailService.SendEmailAsync(model.Email, "Подтвердите адрес электронной почты",
+                        $"Подтвердите регистрацию на сайте Sporos, перейдя по ссылке: <a href='{callBackUrl}'>ссылка</a>");
                     Cart сart = new Cart() { UserId = user.Id };
                     await context.SaveChangesAsync();
                     await _signInManager.SignInAsync(user, false);
                     await _userManager.AddClaimAsync(user, new Claim("CartCount", "0"));
-
-                    // Дополнительные сведения о включении подтверждения учетной записи и сброса пароля см. на странице https://go.microsoft.com/fwlink/?LinkID=320771.
-                    // Отправка сообщения электронной почты с этой ссылкой
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -142,6 +139,8 @@ namespace SporosCore.Controllers
             if (user.Patronymic != null) model.Patronymic = user.Patronymic;
             if (user.PhoneNumber != null) model.PhoneNumber = user.PhoneNumber;
             if (user.CompanyName != null) model.CompanyName = user.CompanyName;
+            if (user.EmailConfirmed) model.Confirmed = true;
+            else model.Confirmed = false;
             if (addresses != null) model.Addresses = addresses.ToList();
             if (user.Orders != null) 
             { 
@@ -214,6 +213,37 @@ namespace SporosCore.Controllers
             var result = context.Address.Remove(address);
             context.SaveChanges();
             return RedirectToAction("Profile", "Account");
+        }
+        [HttpPost]
+        [Route("Account/Email")]
+        public async Task<IActionResult> Email()
+        {
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callBackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            EmailService emailService = new EmailService();
+            await emailService.SendEmailAsync(user.Email, "Подтвердите адрес электронной почты",
+                $"Подтвердите регистрацию на сайте Sporos, перейдя по ссылке: <a href='{callBackUrl}'>ссылка</a>");
+            return Content("Письмо было отправлено на вашу электронную почту. Для подтверждения электронной почты перейдите по ссылке в письме.");
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+                return View("Error");
         }
     }
 }

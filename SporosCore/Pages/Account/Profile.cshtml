@@ -108,5 +108,13 @@
             <input type="button" class="change" value="Изменить">
             <input type="button" class="submitChanges" value="Сохранить">
         </div>
+    @if (!Model.Confirmed)
+    {
+        <div class="EmailConfirm buttons">
+            <p>Ваш адрес электронной почты не подтвержден</p>
+            <p class="reqEmailConfirm"></p>
+            <input type="button" class="send" value="Подтвердить">
+        </div>
+        }
     </div>
 

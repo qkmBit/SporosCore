@@ -68,7 +68,10 @@
     </div>
     @if (User.Identity.IsAuthenticated)
     {
+        <div class="cart" style="display:none; height:0px; width: 0px;">
+        </div>
         <div class="cartIcon">
+            <input type="checkbox" id="cartCheck" hidden>
             <img src="~/images/cart.png">
         </div>
         <div class="cartCountIcon">@User.Claims.Where(u=> u.Type=="CartCount").Select(u=>u.Value).FirstOrDefault()</div>

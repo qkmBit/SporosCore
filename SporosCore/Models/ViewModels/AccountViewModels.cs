@@ -71,6 +71,7 @@ namespace SporosCore.Models.ViewModels
         public List<Category> Categories = new List<Category>();
         public bool AddressAdd { get; set; }
         public int AddressId { get; set; }
+        public bool Confirmed { get; set; }
         public bool Picked { get; set; }
     }
 }

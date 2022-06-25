@@ -1,0 +1,25 @@
+﻿@model SporosCore.Models.ViewModels.CartViewModel
+
+            <p>Корзина</p>
+            <table>
+                <tr class="cartHeader">
+                    <td>Название</td>
+                    <td>Количество</td>
+                </tr>
+                @foreach(var item in Model.CartItems){
+                <tr>
+                    <td hidden id="@item.ItemId"></td>
+                    <td id="ItemName">@item.Items.Category.CategoryName "@item.Items.ItemName"</td>
+                    <td>
+                        <input type="number" id="count" min="1" max="1000" step="10" value="@item.Count">
+                    </td>
+                    <td>
+                        <div class="cartDelBtn" onclick="delFromCart" cartId="@item.CartId" itemId="@item.ItemId">Удалить</div>
+                    </td>
+                </tr>
+                }
+            </table>
+            <a id="clear" href="@Url.Action("ClearCart","Home",Model.CartItems[0].CartId)">Очистить корзину</a>
+            <div class="cartBtns buttonsCart">
+                <input type="button" class="cartPay" value="К оплате">
+            </div>

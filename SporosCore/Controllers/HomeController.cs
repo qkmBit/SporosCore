@@ -61,5 +61,21 @@ namespace SporosCore.Controllers
         {
             return PartialView("~/Pages/Account/LoginPartial.cshtml");
         }
+        public ActionResult Cart()
+        {
+            CartViewModel model = new CartViewModel();
+            var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+            var cart = context.Cart.Where(c => c.UserId == user.Id).FirstOrDefault();
+            var cartItems = context.CartItems.Where(ci => ci.CartId == cart.CartId).ToList();
+            model.CartItems = cartItems;
+            foreach (var item in cartItems)
+            {
+                var cartItem = context.Items.Where(i => i.ItemId == item.ItemId).FirstOrDefault();
+                var category = context.Category.Where(c => c.CategoryId == cartItem.CategoryId).FirstOrDefault();
+                model.Items.Add(cartItem);
+                model.Categories.Add(category);
+            }
+            return PartialView("~/Pages/CartPartial.cshtml",model);
+        }
     }
 }

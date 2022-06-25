@@ -46,6 +46,7 @@ namespace SporosCore.Models
         public string InfoPic1 { get; set; }
         public string InfoPic2 { get; set; }
         public string InfoPic3 { get; set; }
+        public int Price { get; set; }
 
         public virtual ICollection<CartItems> CartItems { get; set; }
         public virtual Category Category { get; set; }

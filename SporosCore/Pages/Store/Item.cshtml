@@ -34,6 +34,7 @@
         <div class="item-name">@Model.Item.ItemName</div>
         <div class="item-category">Категория Элита</div>
         <div class="item-originator">Оригинатор: @Model.Item.Originator</div>
+        <div class="item-originator">Цена: @Model.Item.Price р. за кг.</div>
     </div>
     <nav class="elemCategory storeCategory elemCategory--new">
         <p class="text-sm-center nav-link" onclick="goToBlock('Advantages')">Преимущества</p>
@@ -258,5 +259,5 @@
         </div>
     </div>
     <div class="buyRow">
-        <button class="buyBtn">Приобрести</button>
+        <button class="buyBtn" id="@Model.Item.ItemId">Приобрести</button>
     </div>
