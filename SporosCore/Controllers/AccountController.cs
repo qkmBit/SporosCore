@@ -92,6 +92,7 @@ namespace SporosCore.Controllers
                     await context.SaveChangesAsync();
                     await _signInManager.SignInAsync(user, false);
                     await _userManager.AddClaimAsync(user, new Claim("CartCount", "0"));
+                    await _signInManager.RefreshSignInAsync(user);
 
                     return RedirectToAction("Index", "Home");
                 }

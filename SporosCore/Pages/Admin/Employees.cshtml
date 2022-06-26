@@ -1,0 +1,103 @@
+﻿@model List<SporosCore.Models.ViewModels.EmployeesViewModel>
+@{
+    ViewBag.Title = "Пользователи";
+    ViewBag.css = new string[5] { "headerStyle.css", "storeCategoryStyle.css", "adminStyle.css", "profileStyle.css", "footerStyle.css"};
+    Layout = "~/Pages/Shared/_IndexLayout.cshtml";
+}
+<div class="path">
+        <a class="first-path" href="main.html">Главная</a>
+        <div class="arrow">
+            <div></div>
+        </div>
+        <a class="current-path">Пользователи</a>
+    </div>
+    <div class="searchContainer">
+        <label for="search">Поиск: </label>
+        <input type="text" id="search" class="profileInput">
+        <input type="button" class="searchBtn" value="Поиск">
+    </div>
+    <div class="content">
+        <table>
+            <tr class="usersHeader">
+                <td>Фамилия</td>
+                <td>Имя</td>
+                <td>Отчество</td>
+                <td>Email</td>
+                <td>Роль</td>
+            </tr>
+            @foreach(var user in Model){
+            <tr class="usersTable">
+                @if(@user.Role=="admin"){
+                <td><input type="text" id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" id="post" value="@user.User.Email"></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option value="user">Пользователь</option>
+                    <option  value="employee">Работник</option>
+                    <option selected value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+                else if(@user.Role=="employee"){
+                    <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" disabled id="post" value="@user.User.Email"></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option value="user">Пользователь</option>
+                    <option selected value="employee">Работник</option>
+                    <option  value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+                else{
+                <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" disabled id="post" value="@user.User.Email"></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option selected value="user">Пользователь</option>
+                    <option value="employee">Работник</option>
+                    <option value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+            </tr>
+            }
+        </table>
+        <div class="flagsContainer">
+            <p>Сортировка</p>
+            <div class="flags">
+                <p>По ролям</p>
+                <div class="flag">
+                    <input type="checkbox" id="roleUser" checked>
+                    <label for="roleUser">Пользователи</label>
+                </div>
+                <div class="flag">
+                    <input type="checkbox" id="roleEmployee" checked>
+                    <label for="roleEmployee">Работники</label>
+                </div>
+                <div class="flag">
+                    <input type="checkbox" id="roleAdmin" checked>
+                    <label for="roleAdmin">Администраторы</label>
+                </div>
+            </div>
+            <div class="flags">
+                <p>По должностям</p>
+                <div class="flag">
+                    <input type="checkbox" id="postAccountant">
+                    <label for="postAccountant">Бухгалтеры</label>
+                </div>
+                <div class="flag">
+                    <input type="checkbox" id="postDeveloper">
+                    <label for="postDeveloper">Разработчики</label>
+                </div>
+                <div class="flag">
+                    <input type="checkbox" id="postDirector">
+                    <label for="postDirector">Директора</label>
+                </div>
+            </div>
+            <input type="button" class="confirmSort" value="Подтвердить" />
+        </div>
+    </div>

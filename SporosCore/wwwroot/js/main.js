@@ -401,3 +401,19 @@ $(function () {
         });
     })
 });
+
+$(function () {
+    let prev;
+    $(document).on("focus", '.roleSelect', function (e) {
+           prev = $(this).val();
+
+    });
+    $(document).on("change", '.roleSelect', function (e) {
+        var conf = confirm("Подтвердить изменине роли?");
+        if (!conf) {
+            $(this).val(prev);
+            return false;
+        }
+
+    })
+});

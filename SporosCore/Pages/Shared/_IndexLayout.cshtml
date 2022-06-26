@@ -4,8 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Sporos</title>
-    <link rel="stylesheet" href="~/css/mainStyle.css" />
     <link rel="stylesheet" href="~/css/defaultStyle.css" />
+      @for (int i = 0; i < ViewBag.css.Length; i++)
+      {
+        <link rel="stylesheet" href="~/css/@ViewBag.css[i]">
+      }
 </head>
 <body>
     <header>
@@ -36,9 +39,19 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <a asp-action="Profile" asp-controller="Account">Личный кабинет</a>
+                    @if (User.IsInRole("employee"))
+                    {
+                        <a asp-action="Orders" asp-controller="Employee">Заказы</a>
+                        <a asp-action="Clients" asp-controller="Employee">Клиенты</a>
+                       @if(User.IsInRole("admin"))
+                        {
+                            <a asp-action="Employees" asp-controller="Admin">Работники</a>
+                            <a asp-action="Spravochnik" asp-controller="Admin">Справочники</a>
+                        }
+                    }
                     <a asp-action="Logout" asp-controller="Account">Выйти</a>
                 }
-                else
+                else 
                 {
                     <a onclick="AuthOpen()">Войти</a>
                     @Html.ActionLink("Регистрация","Register","Account")

@@ -1,0 +1,49 @@
+﻿@model List<SporosCore.Models.ViewModels.EmployeesViewModel>
+
+        <tr class="usersHeader">
+                <td>Фамилия</td>
+                <td>Имя</td>
+                <td>Отчество</td>
+                <td>Email</td>
+                <td>Роль</td>
+            </tr>
+            @foreach(var user in Model){
+            <tr class="usersTable">
+                if(@user.Role=="admin"){
+                <td><input type="text" id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" id="post" value=""></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option value="user">Пользователь</option>
+                    <option  value="employee">Работник</option>
+                    <option selected value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+                else if(@user.Role=="employee"){
+                    <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" disabled id="post" value="@user.User.Email"></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option value="user">Пользователь</option>
+                    <option selected value="employee">Работник</option>
+                    <option value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+                else{
+                <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" disabled id="post" value=""></td>
+                <td><select name="role" class="roleSelect" size="1">
+                    <option selected value="user">Пользователь</option>
+                    <option value="employee">Работник</option>
+                    <option value="admin">Администратор</option>
+                    </select>
+                </td>
+                }
+            </tr>
+            }
