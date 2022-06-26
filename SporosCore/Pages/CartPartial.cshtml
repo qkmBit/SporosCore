@@ -5,13 +5,17 @@
                 <tr class="cartHeader">
                     <td>Название</td>
                     <td>Количество</td>
+                    <td>Цена</td>
                 </tr>
                 @foreach(var item in Model.CartItems){
-                <tr>
-                    <td hidden id="@item.ItemId"></td>
+                <tr class="cartItems" id="@item.Items.Price">
+                    <td hidden class="hiddenItemId" id="@item.ItemId" cartId="@item.CartId"></td>
                     <td id="ItemName">@item.Items.Category.CategoryName "@item.Items.ItemName"</td>
                     <td>
                         <input type="number" id="count" min="1" max="1000" step="10" value="@item.Count">
+                    </td>
+                    <td>
+                        <input type="text" class="price" disabled value="@(item.Items.Price*item.Count)">
                     </td>
                     <td>
                         <div class="cartDelBtn" onclick="delFromCart" cartId="@item.CartId" itemId="@item.ItemId">Удалить</div>
@@ -19,7 +23,14 @@
                 </tr>
                 }
             </table>
-            <a id="clear" href="@Url.Action("ClearCart","Home",Model.CartItems[0].CartId)">Очистить корзину</a>
+            <p id="fullPrice">Итого: @{
+        int fullPrice=0;
+        foreach(var item in Model.CartItems)
+        {
+            fullPrice += item.Items.Price * item.Count;
+        }
+            }@fullPrice</p>
+            <a id="clear" cartId="@Model.CartItems[0].CartId" href="#">Очистить корзину</a>
             <div class="cartBtns buttonsCart">
                 <input type="button" class="cartPay" value="К оплате">
             </div>

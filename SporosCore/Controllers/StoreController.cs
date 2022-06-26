@@ -69,5 +69,25 @@ namespace SporosCore.Controllers
             await _signInManager.RefreshSignInAsync(user);
             return RedirectToAction("Cart", "Home");
         }
+        public async Task<ActionResult> DeleteAllFromCart(int cartId)
+        {
+            var cartItems = context.CartItems.Where(ci => ci.CartId == cartId);
+            context.CartItems.RemoveRange(cartItems);
+            var user = _userManager.FindByEmailAsync(User.Identity.Name).Result;
+            await context.SaveChangesAsync();
+            var claim = User.Claims.Where(c => c.Type == "CartCount").FirstOrDefault();
+            await _userManager.ReplaceClaimAsync(user, claim, new Claim("CartCount", "0"));
+            await _signInManager.RefreshSignInAsync(user);
+            return Content("Ok");
+        }
+        public async Task<IActionResult> CartChangeCount([FromForm]List<CartItems> cartItems)
+        {
+            foreach(var cartItem in cartItems)
+            {
+                context.CartItems.Update(cartItem);
+            }
+            await context.SaveChangesAsync();
+            return Content("Ok");
+        }
     }
 }

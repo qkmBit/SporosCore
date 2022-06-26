@@ -226,7 +226,7 @@ $(function () {
     })
 });
 $(function () {
-    $('.cartIcon').click(function () {
+    $(document).on("click", '.cartIcon',function () {
         $('#cartCheck')[0].checked = !$('#cartCheck')[0].checked;
         if ($('#cartCheck')[0].checked) {
             $.ajax({
@@ -250,6 +250,30 @@ $(function () {
             });
         }
         else {
+            var cartItems = document.getElementsByClassName('cartItems');
+            var CartItems = [];
+            var cartList = [];
+            for (let i = 0; i < cartItems.length; i++) {
+                CartItems = {
+                    CartId: cartItems[i].querySelector(".hiddenItemId").attributes.cartId.nodeValue,
+                    ItemId: cartItems[i].querySelector(".hiddenItemId").attributes.id.nodeValue,
+                    Count: cartItems[i].querySelector("#count").value
+                }
+                cartList.push(CartItems)
+            }
+            $.ajax({
+                url: '../Store/CartChangeCount',
+                type: "Post",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    cartItems: cartList
+                },
+                success: function (data) {
+                }
+            });
             $('.cart').html("");
             $('.cart').css({ "padding": "0px" });
             $('.cart').css({ "height": "0px" });
@@ -301,6 +325,41 @@ $(function () {
     })
 });
 $(function () {
+    $(document).on("change", '#count', function (e) {
+        
+        var count = e.currentTarget.parentElement.parentElement.attributes.id.nodeValue;
+        var price = e.currentTarget.parentElement.parentElement.querySelector("#count").value;
+        var oldPrice = e.currentTarget.parentElement.parentElement.querySelector(".price").value;
+        var newFullPrice = 0;
+        var prices = document.getElementsByClassName("price");
+        e.currentTarget.parentElement.parentElement.querySelector(".price").value = count * price;
+        for (var i = 0; i < prices.length; i++){
+        newFullPrice = newFullPrice + Number(prices[i].value);
+        }
+        $("#fullPrice").html("Итого: " + newFullPrice);
+    })
+});
+$(function () {
+    $(document).on("click", '#clear', function (e) {
+        $.ajax({
+            url: '../Store/DeleteAllFromCart',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                cartId: (this).attributes.cartId.nodeValue
+            },
+            success: function (data) {
+                $('.cart').remove();
+                $('.cartCountIcon').remove();
+                $('.cartIcon').remove();
+            }
+        });
+    })
+});
+$(function () {
     $('.buyBtn').click(function (e) {
         $.ajax({
             url: '../Store/AddToCart',
@@ -313,6 +372,28 @@ $(function () {
                 id: e.currentTarget.id
             },
             success: function (data) {
+                if ($('.cartCountIcon'.length == 0)){
+                    let cartCountIcon = document.createElement('div');
+                    let cartIcon = document.createElement('div');
+                    let checkbox = document.createElement('input');
+                    let img = document.createElement('img');
+                    let cart = document.createElement('div');
+                    cartCountIcon.className = "cartCountIcon";
+                    cartIcon.className = "cartIcon";
+                    checkbox.id = "cartCheck";
+                    checkbox.type = "checkbox";
+                    checkbox.setAttribute("hidden","hidden");
+                    img.src = "../images/cart.png";
+                    cart.className = "cart";
+                    cart.style.width = "0px";
+                    cart.style.height = "0px";
+                    cart.style.display = "none";
+                    document.body.append(cart);
+                    document.body.append(cartIcon);
+                    document.body.append(cartCountIcon);
+                    cartIcon.append(img);
+                    cartIcon.append(checkbox);
+                }
                 $('.cartCountIcon').html(data);
                 $('.cartIcon').css({ 'margin-bottom': '5px' });
                 $('.cartCountIcon').css({ 'margin-bottom': '5px' });
