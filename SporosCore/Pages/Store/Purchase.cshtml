@@ -1,0 +1,80 @@
+﻿@model SporosCore.Models.ViewModels.PurchaseViewModel
+@{
+    ViewBag.Title = "Подтверждение покупки";
+    ViewBag.css = new string[5] {"storeCategoryStyle.css","headerStyle.css","purchaseStyle.css", "footerStyle.css", "profileStyle.css" };
+}
+
+@Html.AntiForgeryToken()
+<div class="path">
+    <a class="first-path" href="@Url.Action("Index","Home")">Главная</a>
+    <div class="arrow">
+        <div></div>
+    </div>
+    <a class="current-path">Заказ</a>
+</div>
+<div class="purchaseContainer">
+    <p>Ваш заказ:</p>
+    <div class="itemRow headerRow">
+        <p class="PhotoText">Фото</p>
+        <p class="itemName">Название</p>
+        <p class="itemCount">Количество</p>
+        <p class="add">Обработка</p>
+        <p class="addPercent">Процент</p>
+        <p class="Price">Цена</p>
+    </div>
+    @foreach(var item in Model.CartItems){
+    <div class="itemRow">
+        <div class="Photo">
+            <img src="~/images/@item.CartItem.Items.PicPath">
+            <div class="filter"></div>
+        </div>
+        <div class="itemName" id="@item.CartItem.ItemId">@item.CartItem.Items.Category.CategoryName "@item.CartItem.Items.ItemName"</div>
+        <div class="itemCount"><input type="number" id="countPurchase" price="@item.CartItem.Items.Price" min="1" max="1000" step="10" value="@item.CartItem.Count"></div>
+        <div class="add">
+            <select id="addOptions">
+                @foreach(var option in @Model.AdditionalOptions){
+                    @if(option.AdditionalOptionId==0) { <option selected value="@option.AdditionalOptionId" percent="@option.Percent">@option.Name</option> }
+                    else { <option value="@option.AdditionalOptionId" percent="@option.Percent">@option.Name</option> }
+                }
+            </select>
+        </div>
+        <div class="addPercent">
+            0%
+        </div>
+        <div class="Price" price="@item.Price" curPrice="@item.Price">@item.Price р.</div>
+    </div>
+    }
+    <p class="fullPrice">Итого: @Model.Price р.</p>
+    <p>Информация о пользователе:</p>
+    <div class="userInfo">
+        <p><span>Электронная почта:</span> @Model.User.Email</p>
+        <p><span>ФИО заказчика:</span> @Model.User.SecondName @Model.User.FirstName @Model.User.Patronymic</p>
+    </div>
+    <p>Адрес доставки:</p>
+    <div class="address">
+        <select name="address" class="addrSel" size="1">
+            @for(int i = 0; i < @Model.Addresses.Count; i++)
+            {
+                <option data="@Model.Addresses[i].AddressId" value="@Model.Addresses[i].AddressId">Адрес @(i+1)</option>
+            }
+                <option value="Add">Другой</option>
+                <option selected hidden value="NotPicked">Не выбран</option>
+            </select>
+            
+                    <div class="profileRow" id="CityDiv" style="display:none">
+                        <label for="City"><span>Город</span></label>
+                        <input type="text" class="profileInput" id="City" disabled tabindex="1" placeholder="Город" value="">
+                    </div>
+                    <div class="profileRow" id="AddressTxtDiv" style="display:none">
+                        <label for="AddressTxt"><span>Адрес доставки</span></label>
+                        <input type="text" class="profileInput" id="AddressTxt" disabled tabindex="2" placeholder="Адрес" value="">
+                    </div>
+    </div>
+    <div class="errors">
+        
+    </div>
+        <div class="buttons">
+            <input type="button" class="orderNow" value="Заказать">
+            @*<input type="button" class="buy" value="Оплатить">*@
+        </div>
+</div>

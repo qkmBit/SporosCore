@@ -42,6 +42,7 @@ namespace SporosCore.Controllers
                     var count = cartItems.Count().ToString();
                     if(User.Claims.Where(u=>u.Type=="CartCount").Count()==0)
                         await _userManager.AddClaimAsync(user, new Claim("CartCount", count));
+                    await _signInManager.RefreshSignInAsync(user);
                     return RedirectToAction("Index", "Home");
                 }
                 else

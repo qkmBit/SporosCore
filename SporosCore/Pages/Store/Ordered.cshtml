@@ -1,0 +1,12 @@
+﻿
+@model SporosCore.Models.ViewModels.ThanksViewModel
+@{
+    ViewBag.Title = "Спасибо за заказ";
+    ViewBag.css = new string[5] {"storeCategoryStyle.css","headerStyle.css","purchaseStyle.css", "footerStyle.css", "profileStyle.css" };
+}
+<div class="OrderedContainer">
+    <h1>Спасибо за заказ</h1>
+    <p>Ваш заказ принят. Номер вашего заказа: @(Model.OrderId). В течении 24 часов с вами свяжется сотрудник компании для уточнения деталей заказа и сроков доставки.</p>
+    <p>Если в течении 24 часов с вами не свяжутся, позвоните по номеру: <a href="tel:+79249302212">+7 924 930 2212</a>.</p>
+    <p class="right">Компания "Sporos"</p>
+</div>

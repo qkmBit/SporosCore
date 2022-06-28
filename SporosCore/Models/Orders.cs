@@ -15,10 +15,10 @@ namespace SporosCore.Models
         public int OrderId { get; set; }
         public string UserId { get; set; }
         public DateTime OrderDate { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
         public Nullable<bool> Payed { get; set; }
-        public int AddressId { get; set; }
 
-        public virtual Address Address { get; set; }
         public virtual ICollection<OrderItems> OrderItems { get; set; }
         public virtual Users User { get; set; }
     }

@@ -89,5 +89,65 @@ namespace SporosCore.Controllers
             await context.SaveChangesAsync();
             return Content("Ok");
         }
+        public IActionResult OpenPurchase()
+        {
+            PurchaseViewModel model = new PurchaseViewModel();
+            var user = _userManager.FindByEmailAsync(User.Identity.Name).Result;
+            model.User = user;
+            var cart = context.Cart.Where(c => c.UserId == user.Id).FirstOrDefault();
+            model.Cart = cart;
+            var addresses = context.Address.Where(a => a.UserId == user.Id).ToList();
+            model.Addresses = addresses;
+            var cartItems = context.CartItems.Where(ci => ci.CartId == cart.CartId).ToList();
+            List<ItemInPurchase> itemInPurchase = new List<ItemInPurchase>();
+            var categories = context.Category.ToList();
+            model.Categories = categories;
+            var additionalOptions = context.AdditionalOption.ToList();
+            model.AdditionalOptions = additionalOptions;
+            List<Items> items = new List<Items>();
+            int price = 0;
+            foreach(var cartItem in cartItems)
+            {
+                ItemInPurchase inPurchase = new ItemInPurchase();
+                var item = context.Items.Where(i => i.ItemId == cartItem.ItemId).FirstOrDefault();
+                price += item.Price * cartItem.Count;
+                int itemPrice = item.Price * cartItem.Count;
+                items.Add(item);
+                inPurchase.CartItem = cartItem;
+                inPurchase.Price = itemPrice;
+                itemInPurchase.Add(inPurchase);
+            }
+            model.CartItems = itemInPurchase;
+            model.Price = price;
+            model.Items = items;
+            return View("~/Pages/Store/Purchase.cshtml", model);
+        }
+        public async Task<IActionResult> OrderNow([FromForm]List<OrderNowViewModel> model, string address, string city)
+        {
+            var user = _userManager.FindByEmailAsync(User.Identity.Name).Result;
+            Orders Order = new Orders() { Address = address, City = city, OrderDate = DateTime.Now, UserId = user.Id };
+            await context.Orders.AddAsync(Order);
+            await context.SaveChangesAsync();
+            var orderInDb = context.Orders.Where(o => o.Address == address && o.City == city && o.OrderDate == DateTime.Now && o.UserId==user.Id).FirstOrDefault();
+            foreach (var item in model)
+            {
+                OrderItems orderItem = new OrderItems();
+                orderItem.ItemId = item.ItemId;
+                orderItem.OrderId = Order.OrderId;
+                orderItem.Count = item.Count;
+                orderItem.AdditionalOptionId = item.OptionId;
+                await context.OrderItems.AddAsync(orderItem);
+            }
+            var cart = context.Cart.Where(u => u.UserId == user.Id).FirstOrDefault();
+            var cartItems = context.CartItems.Where(c => c.CartId == cart.CartId);
+            var claim = User.Claims.Where(c => c.Type == "CartCount").FirstOrDefault();
+            await _userManager.ReplaceClaimAsync(user, claim, new Claim("CartCount", "0"));
+            await _signInManager.RefreshSignInAsync(user);
+            context.CartItems.RemoveRange(cartItems);
+            await context.SaveChangesAsync();
+            ThanksViewModel viewModel = new ThanksViewModel();
+            viewModel.OrderId = Order.OrderId;
+            return View("~/Pages/Store/Ordered.cshtml", viewModel);
+        }
     }
 }

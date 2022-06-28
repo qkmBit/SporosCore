@@ -32,5 +32,5 @@
             }@fullPrice</p>
             <a id="clear" cartId="@Model.CartItems[0].CartId" href="#">Очистить корзину</a>
             <div class="cartBtns buttonsCart">
-                <input type="button" class="cartPay" value="К оплате">
+                <a class="cartPay" href="@Url.Action("OpenPurchase","Store")">Оформление заказа</a>
             </div>

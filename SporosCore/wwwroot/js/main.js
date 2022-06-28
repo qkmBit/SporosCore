@@ -72,7 +72,7 @@ $(function(){
         }
         else {
             $.ajax({
-                url: 'GetAddress',
+                url: '../Account/GetAddress',
                 type: "Post",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("XSRF-TOKEN",
@@ -409,11 +409,139 @@ $(function () {
 
     });
     $(document).on("change", '.roleSelect', function (e) {
+        let now = $(this).val();
+        let name = $(this).parent().parent().children().eq(0).children().first();
+        let secondname = $(this).parent().parent().children().eq(1).children().first();
+        let patronymic = $(this).parent().parent().children().eq(2).children().first();
+        let post = $(this).parent().parent().children().eq(3).children().first();
         var conf = confirm("Подтвердить изменине роли?");
         if (!conf) {
             $(this).val(prev);
             return false;
         }
-
+        $.ajax({
+            url: '../Admin/ChangeRole',
+            type: "Post",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                userId: $(this).parent().parent().attr('id'),
+                role: $(this).val()
+            },
+            success: function (data) {
+                if (data == "Ok") {
+                    $('.roleChangeRes').html("Роль успешно обновлена");
+                    if (now == "employee") {
+                        name.removeAttr("disabled");
+                        secondname.removeAttr("disabled");
+                        patronymic.removeAttr("disabled");
+                        post.removeAttr("disabled");
+                    }
+                    else {
+                        name.attr("disabled", true);
+                        secondname.attr("disabled", true);
+                        patronymic.attr("disabled",true);
+                        post.attr("disabled",true);
+                    }
+                }
+                else {
+                    $('.roleChangeRes').html("При обновлении роли произошла ошибка");
+                    $('.roleChangeRes').css({"color":"red"})
+                }
+            }
+        });
+    })
+});
+$(function () {
+    $(document).on("click", '.confirmSort', function (e) {
+        let user = $('#roleUser').is(':checked');
+        let employee = $('#roleEmployee').is(':checked');
+        let admin = $('#roleAdmin').is(':checked');
+        $.ajax({
+            url: '../Admin/EmployeesInRole',
+            type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                admin: admin,
+                employee: employee,
+                user: user
+            },
+            success: function (data) {
+                $('#table').html(data);
+            }
+        });
+    })
+});
+$(function () {
+    $(document).on("change", '#addOptions', function (e) {
+        let percent = $(this).find(':selected').attr('percent');
+        (this).parentElement.parentElement.querySelector('.addPercent').innerText = percent + "%";
+        let count = $(this).parent().parent()[0].querySelector('#countPurchase').value;
+        let price = (this).parentElement.parentElement.querySelector('.Price').attributes.price.nodeValue;
+        let priceNew = price * count * (100 + Number(percent)) / 100;
+        (this).parentElement.parentElement.querySelector('.Price').innerText = priceNew + " р.";
+        (this).parentElement.parentElement.querySelector('.Price').attributes.curPrice.nodeValue = priceNew;
+        var prices = document.getElementsByClassName("Price");
+        var fullPrice = 0;
+        for (var i = 1; i < prices.length; i++) {
+            fullPrice += Number(prices[i].attributes.curPrice.nodeValue);
+        }
+        $('.fullPrice').html("Итого: " + fullPrice + " р.");
+    })
+});
+$(function () {
+    $(document).on("change", '#countPurchase', function (e) {
+        let count = $(this).val();
+        let percentIndex = $(this).parent().parent()[0].querySelector('#addOptions').selectedIndex;
+        let percent = $(this).parent().parent()[0].querySelector('#addOptions')[percentIndex].value;
+        let price = (this).parentElement.parentElement.querySelector('.Price').attributes.price.nodeValue;
+        let priceNew = price * Number(count) * (100 + Number(percent)) / 100;
+        (this).parentElement.parentElement.querySelector('.Price').innerText = priceNew + " р.";
+        (this).parentElement.parentElement.querySelector('.Price').attributes.curPrice.nodeValue = priceNew;
+        var prices = document.getElementsByClassName("Price");
+        var fullPrice = 0;
+        for (var i = 1; i < prices.length; i++) {
+            fullPrice += Number(prices[i].attributes.curPrice.nodeValue);
+        }
+        $('.fullPrice').html("Итого: " + fullPrice + " р.");
+    })
+});
+$(function () {
+    $(document).on("click", '.orderNow', function (e) {
+        var items = document.getElementsByClassName("itemRow");
+        var modelItems = [];
+        var model = [];
+        for (var i = 1; i < items.length; i++) {
+            let test = items[i].querySelector('#addOptions').selectedIndex;
+            modelItems = {
+                ItemId: items[i].querySelector('.itemName').attributes.id.nodeValue,
+                Count: items[i].querySelector('#countPurchase').value,
+                OptionId: items[i].querySelector('#addOptions')[test].value
+            }
+            model.push(modelItems);
+        }
+        $.ajax({
+            url: '../Store/OrderNow',
+            type: "POST",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: {
+                model: model,
+                address: $('#City').val(),
+                city: $('#AddressTxt').val()
+            },
+            success: function (data) {
+                var newDoc = document.open("text/html", "replace");
+                newDoc.write(data);
+                newDoc.close();
+            }
+        });
     })
 });

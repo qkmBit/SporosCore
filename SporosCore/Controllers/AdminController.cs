@@ -54,15 +54,21 @@ namespace SporosCore.Controllers
             {
                 EmployeesViewModel model1 = new EmployeesViewModel();
                 model1.User = u;
-                if (_userManager.IsInRoleAsync(u, "admin").Result && admin)
+                if (_userManager.IsInRoleAsync(u, "admin").Result)
                 {
-                    model1.Role = "admin";
-                    model.Add(model1);
+                    if (admin)
+                    {
+                        model1.Role = "admin";
+                        model.Add(model1);
+                    }
                 }
-                else if (_userManager.IsInRoleAsync(u, "employee").Result && employee)
+                else if (_userManager.IsInRoleAsync(u, "employee").Result)
                 {
-                    model1.Role = "employee";
-                    model.Add(model1);
+                    if (employee)
+                    {
+                        model1.Role = "employee";
+                        model.Add(model1);
+                    }
                 }
                 else if(user)
                 {
@@ -71,6 +77,27 @@ namespace SporosCore.Controllers
                 }
             }
             return PartialView("~/Pages/Admin/EmployeesInRolePartial.cshtml", model);
+        }
+        public async Task<IActionResult> ChangeRole(string userId, string role)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            switch (role)
+            {
+                case "user":
+                    var roles = _userManager.GetRolesAsync(user).Result.ToList();
+                    await _userManager.RemoveFromRolesAsync(user, roles);
+                    break;
+                case "employee":
+                    if (_userManager.IsInRoleAsync(user, "admin").Result) await _userManager.RemoveFromRoleAsync(user, "admin");
+                    else await _userManager.AddToRoleAsync(user, "employee");
+                    break;
+                case "admin":
+                    await _userManager.AddToRoleAsync(user, "admin");
+                    await _userManager.AddToRoleAsync(user, "employee");
+                    break;
+                default: return Content("Error");
+            }
+            return Content("Ok");
         }
         public IActionResult Spravochnik()
         {

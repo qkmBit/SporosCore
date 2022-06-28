@@ -11,13 +11,14 @@
         </div>
         <a class="current-path">Пользователи</a>
     </div>
+    <div class="roleChangeRes searchContainer"></div>
     <div class="searchContainer">
         <label for="search">Поиск: </label>
         <input type="text" id="search" class="profileInput">
         <input type="button" class="searchBtn" value="Поиск">
     </div>
     <div class="content">
-        <table>
+        <table id="table">
             <tr class="usersHeader">
                 <td>Фамилия</td>
                 <td>Имя</td>
@@ -26,12 +27,12 @@
                 <td>Роль</td>
             </tr>
             @foreach(var user in Model){
-            <tr class="usersTable">
+            <tr class="usersTable" id="@user.User.Id">
                 @if(@user.Role=="admin"){
-                <td><input type="text" id="name" value="@user.User.SecondName"></td>
-                <td><input type="text" id="surname" value="@user.User.FirstName"></td>
-                <td><input type="text" id="patronymic" value="@user.User.Patronymic"></td>
-                <td><input type="text" id="post" value="@user.User.Email"></td>
+                <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
+                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text" disabled id="post" value="@user.User.Email"></td>
                 <td><select name="role" class="roleSelect" size="1">
                     <option value="user">Пользователь</option>
                     <option  value="employee">Работник</option>
@@ -40,10 +41,10 @@
                 </td>
                 }
                 else if(@user.Role=="employee"){
-                    <td><input type="text" disabled id="name" value="@user.User.SecondName"></td>
-                <td><input type="text" disabled id="surname" value="@user.User.FirstName"></td>
-                <td><input type="text" disabled id="patronymic" value="@user.User.Patronymic"></td>
-                <td><input type="text" disabled id="post" value="@user.User.Email"></td>
+                    <td><input type="text"  id="name" value="@user.User.SecondName"></td>
+                <td><input type="text"  id="surname" value="@user.User.FirstName"></td>
+                <td><input type="text"  id="patronymic" value="@user.User.Patronymic"></td>
+                <td><input type="text"  id="post" value="@user.User.Email"></td>
                 <td><select name="role" class="roleSelect" size="1">
                     <option value="user">Пользователь</option>
                     <option selected value="employee">Работник</option>

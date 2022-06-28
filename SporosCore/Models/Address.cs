@@ -16,7 +16,6 @@ namespace SporosCore.Models
         public string City { get; set; }
         public string Address1 { get; set; }
 
-        public virtual ICollection<Orders> Orders { get; set; }
         public virtual Users Users { get; set; }
     }
 }

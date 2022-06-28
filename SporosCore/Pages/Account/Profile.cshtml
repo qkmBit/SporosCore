@@ -90,7 +90,7 @@
                     {
                         <tr>
                             <td>@Model.Orders[i].OrderId</td>
-                            <td>@Model.Orders[i].Address.Address1</td>
+                            <td><p style="font-size: 11pt; color: #858282; font-weight: 400;">@Model.Orders[i].City @Model.Orders[i].Address</p></td>
                             <td>
                                 @for(int j=0;j < @Model.Orders[i].OrderItems.Count; j++)
                                 {
@@ -103,11 +103,11 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="buttons">
-            <input type="button" class="change" value="Изменить">
-            <input type="button" class="submitChanges" value="Сохранить">
-        </div>
+            </div>
+            <div class="buttons">
+                <input type="button" class="change" value="Изменить">
+                <input type="button" class="submitChanges" value="Сохранить">
+            </div>
     @if (!Model.Confirmed)
     {
         <div class="EmailConfirm buttons">
