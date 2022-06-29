@@ -89,7 +89,8 @@ namespace SporosCore.Controllers
                     EmailService emailService = new EmailService();
                     await emailService.SendEmailAsync(model.Email, "Подтвердите адрес электронной почты",
                         $"Подтвердите регистрацию на сайте Sporos, перейдя по ссылке: <a href='{callBackUrl}'>ссылка</a>");
-                    Cart сart = new Cart() { UserId = user.Id };
+                    Cart cart = new Cart() { UserId = user.Id };
+                    await context.Cart.AddAsync(cart);
                     await context.SaveChangesAsync();
                     await _signInManager.SignInAsync(user, false);
                     await _userManager.AddClaimAsync(user, new Claim("CartCount", "0"));
