@@ -129,6 +129,7 @@ namespace SporosCore.Controllers
             await context.Orders.AddAsync(Order);
             await context.SaveChangesAsync();
             var orderInDb = context.Orders.Where(o => o.Address == address && o.City == city && o.OrderDate == DateTime.Now && o.UserId==user.Id).FirstOrDefault();
+            var userMessage = $"Здравствуйте, {user.Email}. Спасибо за оформление заказа в СПОРОС. <br>В вашем заказе: <br><ol>";
             foreach (var item in model)
             {
                 OrderItems orderItem = new OrderItems();
@@ -136,8 +137,12 @@ namespace SporosCore.Controllers
                 orderItem.OrderId = Order.OrderId;
                 orderItem.Count = item.Count;
                 orderItem.AdditionalOptionId = item.OptionId;
+                var itemName = context.Items.Where(i => i.ItemId == orderItem.ItemId).FirstOrDefault();
+                var category = context.Category.Where(c => c.CategoryId == itemName.CategoryId).FirstOrDefault();
+                userMessage += $"<li>{category.CategoryName} \"{itemName.ItemName}\" {orderItem.Count} кг.</li>";
                 await context.OrderItems.AddAsync(orderItem);
             }
+            userMessage += $"</ol>";
             var cart = context.Cart.Where(u => u.UserId == user.Id).FirstOrDefault();
             var cartItems = context.CartItems.Where(c => c.CartId == cart.CartId);
             var claim = User.Claims.Where(c => c.Type == "CartCount").FirstOrDefault();
@@ -147,6 +152,8 @@ namespace SporosCore.Controllers
             await context.SaveChangesAsync();
             ThanksViewModel viewModel = new ThanksViewModel();
             viewModel.OrderId = Order.OrderId;
+            EmailService emailService = new EmailService();
+            await emailService.SendEmailAsync(user.Email, "Спасибо за оформление заказа в СПОРОС!",userMessage);
             return View("~/Pages/Store/Ordered.cshtml", viewModel);
         }
     }
